@@ -14,9 +14,9 @@ Current version: see [`VERSION`](VERSION). Release notes: [`CHANGELOG.md`](CHANG
 
 - **Overview:** booking and travel dates with a countdown, and one card per region
   with its route count and mileage range per cabin.
-- **Region tabs:** one tab per region, showing one table at a time. The tab row stays
-  visible while scrolling, arrow keys switch tabs, and the overview cards open their tab.
-  Links like `#eu` or `#usa` open a region directly (e.g. https://escape-sg.vercel.app/#eu).
+- **Region cards as tabs:** click a region card to show its table directly below (one
+  region at a time; arrow keys move between cards). Links like `#eu` or `#usa` open a
+  region directly (e.g. https://escape-sg.vercel.app/#eu).
 - **Region tables:** one row per route (e.g. Singapore SIN → Istanbul IST), with miles,
   flight numbers and blackout dates for each cabin.
   "—" means no blackout dates, or no deal in that cabin.
@@ -78,7 +78,7 @@ escape-SG/
 └── vercel-deploy/         # deployed to Vercel
     ├── index.html         # page skeleton
     ├── styles.css
-    ├── app.js             # rendering, region tabs, zh/en text, city/region names, archive + check UI
+    ├── app.js             # rendering, region cards/tabs, zh/en text, city/region names, archive + check UI
     ├── data.js            # built-in fallback data (window.PROMO_SEED)
     ├── api/
     │   ├── check.js       # fetch, parse, store

@@ -39,8 +39,9 @@ a { color: inherit; }
 /* ---------- region cards ---------- */
 .region-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 28px; }
 .rcard {
-  display: block; text-decoration: none; border: 1px solid var(--line); border-top: 4px solid var(--c);
-  border-radius: 14px; padding: 20px 22px 18px; transition: transform .15s, box-shadow .15s;
+  position: relative; display: block; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--c);
+  border-radius: 14px; padding: 20px 22px 18px; transition: transform .15s, box-shadow .15s, background .15s;
 }
 .rcard:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16, 24, 40, .08); }
 .rcard h2 { color: var(--c); font-size: 22px; font-weight: 600; margin: 0; }
@@ -126,22 +127,6 @@ td.bo .seg { white-space: nowrap; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-width: 620px) { .archived { padding: 12px 16px; } }
 
-/* region tabs */
-#tables { gap: 0; }
-.rtabs {
-  position: sticky; top: 0; z-index: 5; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
-  padding: 12px 0; margin-bottom: 4px; background: var(--bg);
-}
-.rtabs::-webkit-scrollbar { display: none; }
-.rtab {
-  flex: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--panel);
-  color: var(--c); font: inherit; font-size: 15px; font-weight: 600; padding: 8px 16px; border-radius: 999px; cursor: pointer;
-}
-.rtab .n { font-size: 12px; font-weight: 600; background: var(--soft); color: var(--c); border-radius: 999px; padding: 0 8px; }
-.rtab:hover { border-color: var(--c); }
-.rtab[aria-selected="true"] { background: var(--c); border-color: var(--c); color: #fff; box-shadow: 0 4px 12px rgba(16, 24, 40, .12); }
-.rtab[aria-selected="true"] .n { background: rgba(255, 255, 255, .22); color: #fff; }
-.rtab:focus-visible { outline: 2px solid var(--c); outline-offset: 2px; }
 .panel[role="tabpanel"] { scroll-margin-top: 70px; }
 
 /* hero: stats line + toolbar */
@@ -182,3 +167,16 @@ td.bo .seg { white-space: nowrap; }
   background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16);
 }
 .hbar:last-child { margin-bottom: 0; }
+
+/* region cards as tabs */
+.rcard[aria-selected="true"] {
+  background: color-mix(in srgb, var(--soft) 45%, var(--panel)); border-color: var(--c);
+  box-shadow: 0 0 0 1px var(--c), 0 10px 24px rgba(16, 24, 40, .10);
+}
+.rcard .shown {
+  position: absolute; right: 16px; bottom: 14px; font-size: 12px; font-weight: 600; color: var(--c);
+  background: var(--panel); border: 1px solid var(--c); border-radius: 999px; padding: 1px 10px;
+}
+.rcard[aria-selected="true"] .ranges { padding-right: 96px; }
+.rcard:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
+#tables { scroll-margin-top: 16px; }

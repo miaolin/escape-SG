@@ -7,14 +7,15 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ## [0.5.0] - 2026-10-15
 
 ### Added
-- Region tabs: one tab per region, each showing its route count. The tab row stays at the
-  top while scrolling a long table and supports the left/right arrow keys.
-- Links like `#eu` or `#usa` open a region's tab directly; the address updates when a
-  tab is chosen, so it can be shared.
+- Region cards work as tabs: clicking a card shows that region's table directly below it,
+  and the selected card is highlighted with a "↓ Shown below / 下方显示" label.
+  Left/right arrow keys move between cards.
+- Links like `#eu` or `#usa` open a region directly; the address updates when a card is
+  chosen, so it can be shared.
 
 ### Changed
-- Region tables are shown one at a time in tabs instead of all stacked on the page.
-- Overview region cards now open their region's tab.
+- Region tables are shown one at a time, for the selected card, instead of all stacked on the page.
+- The link under each table now reads "↑ Choose another region" and returns to the cards.
 - Header reorganised into three matching bars under the title: month picker and check
   button (with its status), then promotion dates and discount, then route, region and cabin
   counts. The counts are plain text instead of button-like chips.

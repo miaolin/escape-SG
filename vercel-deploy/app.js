@@ -70,7 +70,8 @@
       legendMiles: '里程为单人单程已含折扣，不含税费',
       source: '数据来源：',
       thRoute: '航线', thMiles: '里程', thFlights: '航班号', thBlackout: '屏蔽期',
-      back: '↑ 返回总览',
+      back: '↑ 选择其他地区',
+      shownBelow: '↓ 下方显示',
       // [{m, segs:["4日","7–9日"]}] → "11月4日, 7–9日, 12月1日"
       blackout: (groups) => groups.map((g) => { const s = [...g.segs]; s[0] = `${g.m}月${s[0]}`; return s; }).flat(),
       day: (a, b) => (b ? `${a}–${b}日` : `${a}日`),
@@ -123,7 +124,8 @@
       legendMiles: 'Miles are per person, one-way, after discount, excluding taxes',
       source: 'Source: ',
       thRoute: 'Route', thMiles: 'Miles', thFlights: 'Flights', thBlackout: 'Blackout',
-      back: '↑ Back to overview',
+      back: '↑ Choose another region',
+      shownBelow: '↓ Shown below',
       // [{m, segs:["4","7–9"]}] → "4, 7–9 Nov, 1 Dec"
       blackout: (groups) => groups.map((g) => { const s = [...g.segs]; s[s.length - 1] += ` ${MON[g.m - 1]}`; return s; }).flat(),
       day: (a, b) => (b ? `${a}–${b}` : `${a}`),
@@ -266,20 +268,10 @@
     renderEditions();
     renderStatus();
 
-    $('#regionGrid').innerHTML = groups.map((g) => {
-      const R = regionInfo(g.name);
-      return `<a class="rcard" href="#${R.id}" style="--c:${R.c};--soft:${R.soft}">
-        <h2>${esc(regionTitle(g))}</h2>
-        <div class="en">${esc(regionSub(g))}</div>
-        <span class="pill">${T.routes(g.rows.size)}</span>
-        <p class="ranges">${cabinRanges(g).join(' · ')}</p>
-      </a>`;
-    }).join('');
-
     $('#legendBar').innerHTML = `<span>${T.legendBo}</span>${dot}<span>${T.legendDash}</span>${dot}<span>${T.legendMiles}</span>`
       + `<span class="src">${T.source}<a href="${esc(meta.source)}" target="_blank" rel="noopener">singaporeair.com</a></span>`;
 
-    renderTables(groups);
+    renderRegions(groups);
 
     $('#notes').innerHTML = `<h2>${T.notesTitle}</h2><ul>${T.notes({
       travel: `${T.short(meta.travelFrom)}–${T.short(meta.travelTo)}`, bookBy: T.short(meta.bookBy), scootPct: meta.scootPct,
@@ -287,19 +279,27 @@
       + `<p class="disclaimer">${esc(T.disclaimer(T.date(meta.retrieved)))}</p>`;
   }
 
-  // ---------- region tabs ----------
+  // ---------- region cards (they work as tabs) + the selected region's table ----------
   let activeRegion = decodeURIComponent(location.hash.slice(1));
   let shownGroups = [];
 
-  function renderTables(groups) {
+  function renderRegions(groups) {
     shownGroups = groups;
     const dot = '<span class="dot">·</span>';
     if (!groups.some((g) => regionInfo(g.name).id === activeRegion)) activeRegion = groups.length ? regionInfo(groups[0].name).id : '';
-    const tabs = groups.map((g) => {
+    const grid = $('#regionGrid');
+    grid.setAttribute('role', 'tablist');
+    grid.setAttribute('aria-label', T.tabsLabel);
+    grid.innerHTML = groups.map((g) => {
       const R = regionInfo(g.name);
       const on = R.id === activeRegion;
-      return `<button type="button" class="rtab" role="tab" id="tab-${R.id}" data-region="${R.id}" aria-selected="${on}" aria-controls="panel-${R.id}" tabindex="${on ? 0 : -1}" style="--c:${R.c};--soft:${R.soft}">`
-        + `${R.icon} ${esc(regionTitle(g))}<span class="n">${g.rows.size}</span></button>`;
+      return `<button type="button" class="rcard" role="tab" id="card-${R.id}" data-region="${R.id}" aria-selected="${on}" aria-controls="panel-${R.id}" tabindex="${on ? 0 : -1}" style="--c:${R.c};--soft:${R.soft}">
+        <h2>${esc(regionTitle(g))}</h2>
+        <div class="en">${esc(regionSub(g))}</div>
+        <span class="pill">${T.routes(g.rows.size)}</span>
+        <p class="ranges">${cabinRanges(g).join(' · ')}</p>
+        ${on ? `<span class="shown">${T.shownBelow}</span>` : ''}
+      </button>`;
     }).join('');
     const g = groups.find((x) => regionInfo(x.name).id === activeRegion);
     let panel = '';
@@ -320,7 +320,7 @@
         return `<tr><td class="route">${city(row.origin)}<span class="arr">→</span>${city(row.dest)}</td>${cells}</tr>`;
       }).join('');
 
-      panel = `<section class="panel" id="panel-${R.id}" role="tabpanel" aria-labelledby="tab-${R.id}" style="--c:${R.c};--c2:${R.c2};--soft:${R.soft}">
+      panel = `<section class="panel" id="panel-${R.id}" role="tabpanel" aria-labelledby="card-${R.id}" style="--c:${R.c};--c2:${R.c2};--soft:${R.soft}">
         <div class="rhead">
           <div><h2>${R.icon} ${esc(regionTitle(g))}</h2><div class="en">${esc(regionSub(g))}</div></div>
           <div class="right">
@@ -331,19 +331,21 @@
         <div class="tscroll"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>
         <div class="tfoot">
           <span>${T.legendBo}</span>${dot}<span>${T.legendDash}</span>
-          <a class="back" href="#overview">${T.back}</a>
+          <a class="back" href="#regionGrid" data-to-cards>${T.back}</a>
         </div>
       </section>`;
     }
-    $('#tables').innerHTML = `<div class="rtabs" role="tablist" aria-label="${esc(T.tabsLabel)}">${tabs}</div>${panel}`;
+    $('#tables').innerHTML = panel;
   }
 
+  // scroll: 'always' (links like #eu) or 'if-hidden' (card clicks: only when the table is off screen, e.g. on phones)
   function setRegion(id, scroll) {
     if (!shownGroups.some((g) => regionInfo(g.name).id === id)) return;
     activeRegion = id;
     history.replaceState(null, '', `${location.pathname}${location.search}#${id}`);
-    renderTables(shownGroups);
-    if (scroll) $('#tables').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderRegions(shownGroups);
+    const top = $('#tables').getBoundingClientRect().top;
+    if (scroll === 'always' || (scroll === 'if-hidden' && top > innerHeight * 0.7)) $('#tables').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // ---------- data loading, archive and update check ----------
@@ -423,32 +425,32 @@
     load(a.dataset.goto);
   });
 
-  $('#tables').addEventListener('click', (e) => {
-    const b = e.target.closest('.rtab');
-    if (b) setRegion(b.dataset.region, false);
+  $('#regionGrid').addEventListener('click', (e) => {
+    const b = e.target.closest('.rcard');
+    if (b) setRegion(b.dataset.region, 'if-hidden');
   });
-  $('#tables').addEventListener('keydown', (e) => {
-    const b = e.target.closest('.rtab');
+  $('#regionGrid').addEventListener('keydown', (e) => {
+    const b = e.target.closest('.rcard');
     if (!b || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
-    const tabs = [...document.querySelectorAll('.rtab')];
-    const i = tabs.indexOf(b);
-    const next = { ArrowLeft: i - 1, ArrowRight: i + 1, Home: 0, End: tabs.length - 1 }[e.key];
-    const t = tabs[(next + tabs.length) % tabs.length];
+    const cards = [...document.querySelectorAll('.rcard')];
+    const i = cards.indexOf(b);
+    const next = { ArrowLeft: i - 1, ArrowRight: i + 1, Home: 0, End: cards.length - 1 }[e.key];
+    const t = cards[(next + cards.length) % cards.length];
     e.preventDefault();
     setRegion(t.dataset.region, false);
     document.getElementById(t.id)?.focus();
   });
-  $('#regionGrid').addEventListener('click', (e) => {
-    const a = e.target.closest('.rcard');
-    if (!a) return;
+  $('#tables').addEventListener('click', (e) => {
+    if (!e.target.closest('[data-to-cards]')) return;
     e.preventDefault();
-    setRegion(a.getAttribute('href').slice(1), true);
+    $('#regionGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelector('.rcard[aria-selected="true"]')?.focus({ preventScroll: true });
   });
-  window.addEventListener('hashchange', () => setRegion(decodeURIComponent(location.hash.slice(1)), true));
+  window.addEventListener('hashchange', () => setRegion(decodeURIComponent(location.hash.slice(1)), 'always'));
 
   setLang(initial, false);
   load(params.get('promo')).then(() => {
-    // a link like #eu opens that region's tab; bring it into view once the data has rendered
+    // a link like #eu selects that region; bring its table into view once the data has rendered
     if (location.hash && `#${activeRegion}` === location.hash) $('#tables').scrollIntoView({ block: 'start', behavior: 'instant' });
   });
 })();
