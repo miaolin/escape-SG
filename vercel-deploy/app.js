@@ -315,7 +315,14 @@
       const head = `
         <tr class="group"><th class="route-h" rowspan="2">${T.thRoute}</th>${cabins.map((k) => `<th colspan="3">${T.cabin[k] || k}</th>`).join('')}</tr>
         <tr class="sub">${cabins.map(() => `<th class="first">${T.thMiles}</th><th>${T.thFlights}</th><th>${T.thBlackout}</th>`).join('')}</tr>`;
-      const body = [...g.rows.values()].map((row) => {
+      // keep each out-and-back pair (A → B, B → A) together, in first-seen order
+      const pairs = new Map();
+      for (const row of g.rows.values()) {
+        const key = [row.origin, row.dest].sort().join('|');
+        if (!pairs.has(key)) pairs.set(key, []);
+        pairs.get(key).push(row);
+      }
+      const rowHtml = (row) => {
         const cells = cabins.map((k) => {
           const r = row.cab[k];
           if (!r) return '<td class="first na">—</td><td class="na">—</td><td class="bo na">—</td>';
@@ -324,7 +331,8 @@
             <td class="bo">${blackout(r)}</td>`;
         }).join('');
         return `<tr><td class="route">${city(row.origin)}<span class="arr">→</span>${city(row.dest)}</td>${cells}</tr>`;
-      }).join('');
+      };
+      const body = [...pairs.values()].map((rows) => `<tbody class="pair">${rows.map(rowHtml).join('')}</tbody>`).join('');
 
       panel = `<section class="panel" id="panel-${R.id}" role="tabpanel" aria-labelledby="card-${R.id}" style="--c:${R.c};--c2:${R.c2};--soft:${R.soft}">
         <div class="rhead">
@@ -334,7 +342,7 @@
             <div class="rng">${cabinRanges(g).join(' · ')}</div>
           </div>
         </div>
-        <div class="tscroll"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>
+        <div class="tscroll"><table><thead>${head}</thead>${body}</table></div>
         <div class="tfoot">
           <span>${T.legendBo}</span>${dot}<span>${T.legendDash}</span>
           <a class="back" href="#regionGrid" data-to-cards>${T.back}</a>

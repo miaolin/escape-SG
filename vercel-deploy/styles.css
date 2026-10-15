@@ -64,18 +64,22 @@ a { color: inherit; }
 .tscroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 15px; }
 th { font-weight: 500; color: #374151; }
-thead tr.group th { background: var(--soft); color: var(--c); font-weight: 600; padding: 12px 8px; border-left: 6px solid var(--panel); }
-thead tr.group th.route-h { background: var(--panel); color: #374151; font-weight: 500; border-left: 0; }
+thead tr.group th { background: var(--soft); color: var(--c); font-weight: 700; letter-spacing: .02em; padding: 12px 8px; border-left: 3px solid color-mix(in srgb, var(--c) 30%, #fff); border-bottom: 2px solid var(--c); }
+thead tr.group th.route-h { background: var(--panel); color: #374151; font-weight: 500; letter-spacing: 0; border-left: 0; border-bottom: 1px solid var(--line); }
 thead tr.sub th { padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--row-alt); }
-thead tr.sub th.first { border-left: 6px solid var(--panel); }
+thead tr.sub th.first { border-left: 3px solid color-mix(in srgb, var(--c) 30%, #fff); }
 td { padding: 13px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-tbody tr:nth-child(even) td { background: var(--row-alt); }
+/* out-and-back pairs: shaded alternately, thin dashed line inside a pair, strong line between pairs */
+tbody.pair:nth-of-type(even) td { background: color-mix(in srgb, var(--soft) 45%, #fff); }
+tbody.pair tr:not(:last-child) td { border-bottom: 1px dashed var(--line); }
+tbody.pair tr:last-child td { border-bottom: 2px solid #94a3b8; }
+tbody.pair:last-child tr:last-child td { border-bottom: 0; }
 tbody tr:hover td { background: var(--soft); }
 td.route { white-space: nowrap; padding-left: 16px; font-weight: 500; }
 .iata { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--faint); font-weight: 400; margin: 0 2px 0 3px; }
 .arr { color: var(--c); margin: 0 4px; font-weight: 600; }
 td.miles { font-variant-numeric: tabular-nums; font-weight: 500; white-space: nowrap; }
-td.first { border-left: 6px solid var(--panel); }
+td.first { border-left: 3px solid color-mix(in srgb, var(--c) 30%, #fff); }
 .fno { display: inline-block; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; background: var(--code-bg); border-radius: 5px; padding: 2px 7px; margin: 2px 6px 2px 0; }
 td.bo { color: var(--muted); font-size: 14px; min-width: 150px; }
 td.na { color: var(--faint); }
