@@ -33,13 +33,14 @@
     'Los Angeles': ['洛杉矶', 'LAX'], 'San Francisco': ['旧金山', 'SFO'], 'Seattle': ['西雅图', 'SEA'], 'Houston': ['休斯顿', 'IAH'],
     'Vancouver': ['温哥华', 'YVR'],
   };
+  // One theme colour per region: c = text/border, c2 = gradient end, soft = tint
   const REGION = {
-    'South East Asia':    { zh: '东南亚',     id: 'sea', icon: '🌴', c: '#0f766e', c2: '#14b8a6', soft: '#ccfbf1' },
-    'North Asia':         { zh: '东北亚',     id: 'na',  icon: '🏯', c: '#1d4ed8', c2: '#3b82f6', soft: '#dbeafe' },
-    'West Asia & Africa': { zh: '西亚 & 非洲', id: 'waa', icon: '🕌', c: '#c2410c', c2: '#f59e0b', soft: '#ffedd5' },
-    'Southwest Pacific':  { zh: '西南太平洋', id: 'swp', icon: '🦘', c: '#15803d', c2: '#22c55e', soft: '#dcfce7' },
-    'Europe':             { zh: '欧洲',       id: 'eu',  icon: '🏰', c: '#6d28d9', c2: '#9333ea', soft: '#ede9fe' },
-    'USA':                { zh: '美国',       id: 'usa', icon: '🗽', c: '#b91c1c', c2: '#ef4444', soft: '#fee2e2' },
+    'South East Asia':    { zh: '东南亚',     id: 'sea', icon: '🌴', c: '#0f766e', c2: '#0d9488', soft: '#ccfbf1' }, // jade
+    'North Asia':         { zh: '东北亚',     id: 'na',  icon: '🏯', c: '#be185d', c2: '#db2777', soft: '#fce7f3' }, // sakura
+    'West Asia & Africa': { zh: '西亚 & 非洲', id: 'waa', icon: '🕌', c: '#b45309', c2: '#d97706', soft: '#fef3c7' }, // desert amber
+    'Southwest Pacific':  { zh: '西南太平洋', id: 'swp', icon: '🦘', c: '#0369a1', c2: '#0284c7', soft: '#e0f2fe' }, // ocean
+    'Europe':             { zh: '欧洲',       id: 'eu',  icon: '🏰', c: '#3730a3', c2: '#4f46e5', soft: '#e0e7ff' }, // royal indigo
+    'USA':                { zh: '美国',       id: 'usa', icon: '🗽', c: '#991b1b', c2: '#dc2626', soft: '#fee2e2' }, // crimson
   };
   const regionInfo = (name) => REGION[name] || {
     zh: name, id: 'r-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), icon: '✈️', c: '#334155', c2: '#64748b', soft: '#e2e8f0',
@@ -258,11 +259,12 @@
     const countdown = left > 1 ? T.daysLeft(left) : left === 1 ? T.lastDay : T.closed;
     const dot = '<span class="dot">·</span>';
     $('#heroMeta').innerHTML = `<span class="k">${T.travelLbl}</span> <b>${T.range(meta.travelFrom, meta.travelTo)}</b>${dot}`
-      + `<span class="k">${T.bookLbl}</span> <b>${T.date(meta.bookBy)}</b> <span class="countdown">${countdown}</span>${dot}`
-      + `<span class="k">${T.discount(meta.discountPct)}</span>`;
+      + `<span class="k">${T.bookLbl}</span> <b>${T.date(meta.bookBy)}</b> <span class="countdown${left < 1 ? ' closed' : left <= 3 ? ' urgent' : ''}">${countdown}</span>${dot}`
+      + `<span class="deal">${T.discount(meta.discountPct)}</span>`;
     const cabinsShown = CABINS.filter((k) => promo.routes.some((r) => r.cabin === k)).map((k) => T.cabin[k] || k).join(' / ');
-    $('#heroStats').innerHTML = `<span>✈️ ${T.routes(groups.reduce((n, g) => n + g.rows.size, 0))}</span>${dot}`
-      + `<span>🌏 ${T.regions(groups.length)}</span>${dot}`
+    const boldNum = (t) => t.replace(/^(\d+)/, '<b>$1</b>');
+    $('#heroStats').innerHTML = `<span>✈️ ${boldNum(T.routes(groups.reduce((n, g) => n + g.rows.size, 0)))}</span>${dot}`
+      + `<span>🌏 ${boldNum(T.regions(groups.length))}</span>${dot}`
       + `<span>💺 ${esc(cabinsShown)}</span>${dot}`
       + `<a href="#tables">${T.blackoutLink}</a>`;
     renderEditions();
@@ -293,7 +295,7 @@
     grid.innerHTML = groups.map((g) => {
       const R = regionInfo(g.name);
       const on = R.id === activeRegion;
-      return `<button type="button" class="rcard" role="tab" id="card-${R.id}" data-region="${R.id}" aria-selected="${on}" aria-controls="panel-${R.id}" tabindex="${on ? 0 : -1}" style="--c:${R.c};--soft:${R.soft}">
+      return `<button type="button" class="rcard" role="tab" id="card-${R.id}" data-region="${R.id}" aria-selected="${on}" aria-controls="panel-${R.id}" tabindex="${on ? 0 : -1}" style="--c:${R.c};--c2:${R.c2};--soft:${R.soft}">
         <h2>${esc(regionTitle(g))}</h2>
         <div class="en">${esc(regionSub(g))}</div>
         <span class="pill">${T.routes(g.rows.size)}</span>

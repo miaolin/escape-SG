@@ -35,10 +35,12 @@ a { color: inherit; }
 /* ---------- region cards ---------- */
 .region-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px 28px 28px; }
 .rcard {
-  position: relative; display: block; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer;
-  background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--c);
-  border-radius: 14px; padding: 20px 22px 18px; transition: transform .15s, box-shadow .15s, background .15s;
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
+  width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); overflow: hidden;
+  border-radius: 14px; padding: 24px 22px 18px; transition: transform .15s, box-shadow .15s, background .15s;
 }
+.rcard::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 5px; background: linear-gradient(90deg, var(--c), var(--c2)); }
 .rcard:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16, 24, 40, .08); }
 .rcard h2 { color: var(--c); font-size: 22px; font-weight: 600; margin: 0; }
 .rcard .en { color: var(--faint); letter-spacing: .08em; font-size: 13px; text-transform: uppercase; margin-bottom: 10px; }
@@ -180,11 +182,20 @@ td.bo .seg { white-space: nowrap; }
   margin: 0; padding: 11px 16px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--line);
   color: var(--ink); font-size: 15px;
 }
-.promo-info { font-size: 16px; }
-.promo-info .k { color: var(--hero-to); font-weight: 500; }
+.promo-info {
+  font-size: 16px; color: #fff; border: 0; padding: 13px 18px;
+  background: linear-gradient(110deg, var(--hero-to) 0%, #3b5bcc 100%); box-shadow: 0 4px 14px rgba(30, 58, 138, .18);
+}
+.promo-info .k { color: #bfdbfe; }
 .promo-info b { font-weight: 600; }
-.countdown { font-size: 12px; font-weight: 500; background: #e0e7ff; color: var(--hero-to); border-radius: 999px; padding: 2px 8px; margin-left: 4px; }
-.promo-stats { color: #374151; }
-.promo-stats a { color: var(--hero-to); font-weight: 500; text-decoration: none; border-bottom: 1px solid currentColor; }
+.promo-info .dot { color: rgba(255, 255, 255, .45); }
+.countdown { font-size: 12px; font-weight: 600; background: rgba(255, 255, 255, .18); color: #fff; border-radius: 999px; padding: 2px 9px; margin-left: 4px; }
+.countdown.urgent { background: #dc2626; }
+.countdown.closed { background: rgba(15, 23, 42, .35); color: #cbd5e1; }
+.deal { display: inline-block; background: #fbbf24; color: #422006; font-weight: 700; font-size: 14px; border-radius: 999px; padding: 2px 12px; }
+.promo-stats { background: #eef2ff; border-color: #c7d2fe; color: #1e293b; }
+.promo-stats b { color: var(--hero-to); font-size: 16px; }
+.promo-stats .dot { color: #a5b4fc; }
+.promo-stats a { color: var(--hero-to); font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
 .promo-stats a:hover { color: var(--hero-from); }
 @media (max-width: 620px) { .summary { padding: 16px 16px 0; } .region-grid { padding-top: 14px; } }

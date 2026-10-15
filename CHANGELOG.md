@@ -20,6 +20,12 @@ and the project uses [Semantic Versioning](https://semver.org/).
   the title and a bar with the month picker and check button (with its status). The promotion dates/discount and the route, region and
   cabin counts moved into two light bars directly above the region cards, and the counts
   are plain text instead of button-like chips.
+- The promotion bar is now a filled navy bar with the discount as a gold badge; the
+  days-left counter turns red in the last 3 days and grey once booking has closed. The stats
+  bar has a light blue tint with the numbers in bold.
+- New region colours, one theme per region at a matching depth: jade (South East Asia),
+  sakura pink (North Asia), desert amber (West Asia & Africa), ocean blue (Southwest Pacific),
+  royal indigo (Europe) and crimson (USA). Cards have a gradient band across the top.
 - The English check button is renamed from "Check singaporeair.com" to "Check promotion".
 - The "Blackout dates" chip is now a "Blackout dates by region ↓" link in the stats line.
 
