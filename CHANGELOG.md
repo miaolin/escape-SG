@@ -15,9 +15,9 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ### Changed
 - Region tables are shown one at a time in tabs instead of all stacked on the page.
 - Overview region cards now open their region's tab.
-- Header reorganised: route, region and cabin counts are a plain stats line instead of
-  button-like chips. The month picker and check button sit in their own bar directly under
-  the title, above the dates and stats (month on the left, check button and its status on the right).
+- Header reorganised into three matching bars under the title: month picker and check
+  button (with its status), then promotion dates and discount, then route, region and cabin
+  counts. The counts are plain text instead of button-like chips.
 - The English check button is renamed from "Check singaporeair.com" to "Check promotion".
 - The "Blackout dates" chip is now a "Blackout dates by region ↓" link in the stats line.
 

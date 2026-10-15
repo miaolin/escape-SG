@@ -31,7 +31,7 @@ a { color: inherit; }
 /* ---------- overview hero ---------- */
 .hero { background: linear-gradient(110deg, var(--hero-from) 0%, var(--hero-to) 100%); color: #fff; padding: 36px 44px 30px; }
 .hero h1 { font-size: clamp(24px, 3.6vw, 38px); font-weight: 600; margin: 0 0 14px; letter-spacing: .01em; }
-.hero-meta { margin: 0 0 8px; font-size: 16px; color: #e5ebff; }
+.hero-meta { font-size: 16px; color: #e5ebff; }
 .hero-meta .k { color: var(--hero-accent); }
 .hero-meta b { font-weight: 500; color: #fff; }
 .countdown { font-size: 12px; background: rgba(255, 255, 255, .14); border-radius: 999px; padding: 2px 8px; margin-left: 4px; }
@@ -145,13 +145,12 @@ td.bo .seg { white-space: nowrap; }
 .panel[role="tabpanel"] { scroll-margin-top: 70px; }
 
 /* hero: stats line + toolbar */
-.hero-stats { margin: 0; font-size: 15px; color: #c7d2fe; }
+.hero-stats { font-size: 15px; color: #c7d2fe; }
 .hero-stats a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, .4); }
 .hero-stats a:hover { border-bottom-color: #fff; }
 .toolbar {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-  background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); border-radius: 12px;
-  padding: 8px 10px 8px 14px; margin: 4px 0 22px;
+  padding: 8px 10px 8px 14px;
 }
 .edition { display: flex; align-items: center; gap: 10px; }
 .tlabel { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--hero-accent); font-weight: 600; }
@@ -176,3 +175,10 @@ td.bo .seg { white-space: nowrap; }
   .checker { margin-left: 0; flex-direction: row-reverse; justify-content: flex-end; }
   .check-status { text-align: left; }
 }
+
+/* header bars: check / promotion / stats */
+.hbar {
+  margin: 0 0 10px; padding: 11px 14px; border-radius: 12px;
+  background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16);
+}
+.hbar:last-child { margin-bottom: 0; }
