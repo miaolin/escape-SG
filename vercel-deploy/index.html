@@ -12,17 +12,6 @@
 </head>
 <body>
   <main class="page">
-    <div class="panel toolbar">
-      <label class="edition" id="editionWrap" hidden>
-        <span class="tlabel" data-t="editionLabel"></span>
-        <select id="edition"></select>
-      </label>
-      <div class="checker">
-        <span class="check-status" id="checkStatus" role="status" aria-live="polite"></span>
-        <button type="button" class="check-btn" id="checkBtn"></button>
-      </div>
-    </div>
-
     <section class="panel" id="overview">
       <header class="hero">
         <div class="lang" role="group" aria-label="Language / 语言">
@@ -30,6 +19,16 @@
           <button type="button" data-lang="en">EN</button>
         </div>
         <h1 data-t="h1"></h1>
+        <div class="toolbar">
+          <label class="edition" id="editionWrap" hidden>
+            <span class="tlabel" data-t="editionLabel"></span>
+            <select id="edition"></select>
+          </label>
+          <div class="checker">
+            <span class="check-status" id="checkStatus" role="status" aria-live="polite"></span>
+            <button type="button" class="check-btn" id="checkBtn"></button>
+          </div>
+        </div>
         <p class="hero-meta" id="heroMeta"></p>
         <p class="hero-stats" id="heroStats"></p>
       </header>

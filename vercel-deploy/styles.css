@@ -30,7 +30,7 @@ a { color: inherit; }
 
 /* ---------- overview hero ---------- */
 .hero { background: linear-gradient(110deg, var(--hero-from) 0%, var(--hero-to) 100%); color: #fff; padding: 36px 44px 30px; }
-.hero h1 { font-size: clamp(24px, 3.6vw, 38px); font-weight: 600; margin: 0 0 10px; letter-spacing: .01em; }
+.hero h1 { font-size: clamp(24px, 3.6vw, 38px); font-weight: 600; margin: 0 0 14px; letter-spacing: .01em; }
 .hero-meta { margin: 0 0 8px; font-size: 16px; color: #e5ebff; }
 .hero-meta .k { color: var(--hero-accent); }
 .hero-meta b { font-weight: 500; color: #fff; }
@@ -150,25 +150,27 @@ td.bo .seg { white-space: nowrap; }
 .hero-stats a:hover { border-bottom-color: #fff; }
 .toolbar {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-  padding: 12px 14px 12px 22px; margin-bottom: -12px;
+  background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); border-radius: 12px;
+  padding: 8px 10px 8px 14px; margin: 4px 0 22px;
 }
 .edition { display: flex; align-items: center; gap: 10px; }
-.tlabel { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.tlabel { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--hero-accent); font-weight: 600; }
 .edition select {
-  font: inherit; font-size: 14px; font-weight: 500; color: var(--ink); background: var(--row-alt);
-  border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer;
+  font: inherit; font-size: 14px; font-weight: 500; color: #fff; background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .3); border-radius: 8px; padding: 6px 10px; cursor: pointer;
 }
-.edition select:disabled { cursor: default; color: var(--muted); }
+.edition select:disabled { cursor: default; opacity: .85; }
+.edition select option { color: var(--ink); }
 .checker { display: flex; align-items: center; gap: 12px; margin-left: auto; }
-.check-status { font-size: 13px; color: var(--muted); text-align: right; }
-.check-status.good { color: #15803d; }
-.check-status.err { color: #b91c1c; }
+.check-status { font-size: 13px; color: var(--hero-accent); text-align: right; }
+.check-status.good { color: #86efac; }
+.check-status.err { color: #fca5a5; }
 .check-btn {
-  font: inherit; font-size: 14px; font-weight: 600; color: #fff; background: var(--hero-to); border: 0;
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--hero-from); background: #fff; border: 0;
   border-radius: 8px; padding: 8px 14px; cursor: pointer; white-space: nowrap;
 }
-.check-btn:hover:not(:disabled) { background: var(--hero-from); }
-.check-btn:disabled { opacity: .6; cursor: progress; }
+.check-btn:hover:not(:disabled) { background: #e0e7ff; }
+.check-btn:disabled { opacity: .7; cursor: progress; }
 @media (max-width: 620px) {
   .toolbar { flex-direction: column; align-items: stretch; }
   .checker { margin-left: 0; flex-direction: row-reverse; justify-content: flex-end; }
