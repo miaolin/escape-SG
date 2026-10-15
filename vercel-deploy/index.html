@@ -19,10 +19,17 @@
       </div>
       <h1 data-t="h1"></h1>
       <div class="hbar toolbar">
-        <label class="edition" id="editionWrap" hidden>
-          <span class="tlabel" data-t="editionLabel"></span>
-          <select id="edition"></select>
-        </label>
+        <div class="left-tools">
+          <label class="edition" id="editionWrap" hidden>
+            <span class="tlabel" data-t="editionLabel"></span>
+            <select id="edition"></select>
+          </label>
+          <div class="downloads" role="group">
+            <span class="tlabel" data-t="downloadLabel"></span>
+            <button type="button" class="dl-btn" data-dl="csv">CSV</button>
+            <button type="button" class="dl-btn" data-dl="json">JSON</button>
+          </div>
+        </div>
         <div class="checker">
           <span class="check-status" id="checkStatus" role="status" aria-live="polite"></span>
           <button type="button" class="check-btn" id="checkBtn"></button>

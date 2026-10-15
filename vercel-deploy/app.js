@@ -78,6 +78,8 @@
       day: (a, b) => (b ? `${a}–${b}日` : `${a}日`),
       tabsLabel: '地区',
       editionLabel: '期数', current: '当期', archivedTag: '往期',
+      downloadLabel: '⬇ 下载本期',
+      csvHead: ['地区', '出发', '出发机场', '到达', '到达机场', '舱位', '里程', '航班号', '屏蔽期', '屏蔽期（日期）', '预订开始', '预订截止', '出行开始', '出行结束'],
       archivedBar: (r, link) => `📦 这是往期优惠（${r} 出行），已不可预订。${link}`,
       viewCurrent: '查看当期 →',
       check: '🔄 检查官网更新',
@@ -132,6 +134,8 @@
       day: (a, b) => (b ? `${a}–${b}` : `${a}`),
       tabsLabel: 'Regions',
       editionLabel: 'Month', current: 'current', archivedTag: 'archived',
+      downloadLabel: '⬇ Download',
+      csvHead: ['Region', 'From', 'From airport', 'To', 'To airport', 'Cabin', 'Miles', 'Flights', 'Blackout', 'Blackout dates', 'Booking opens', 'Book by', 'Travel from', 'Travel to'],
       archivedBar: (r, link) => `📦 You're viewing an archived promotion (${r} travel). It can no longer be booked. ${link}`,
       viewCurrent: 'View current →',
       check: '🔄 Check promotion',
@@ -350,6 +354,37 @@
     if (scroll === 'always' || (scroll === 'if-hidden' && top > innerHeight * 0.7)) $('#tables').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // ---------- download the month being viewed ----------
+  function saveFile(name, text, type) {
+    const url = URL.createObjectURL(new Blob([text], { type }));
+    const a = Object.assign(document.createElement('a'), { href: url, download: name });
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function download(format) {
+    const name = `spontaneous-escapes-${promo.id}`;
+    if (format === 'json') {
+      const { id, meta, routes } = promo;
+      saveFile(`${name}.json`, JSON.stringify({ id, meta, routes }, null, 2), 'application/json');
+      return;
+    }
+    const cell = (v) => { const t = String(v ?? ''); return /[",\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; };
+    const plain = (html) => { const d = document.createElement('div'); d.innerHTML = html; return d.textContent; };
+    const cityName = (n) => { const [zh, , en] = CITY[n] || [n]; return lang === 'zh' ? zh : en || n; };
+    const code = (n) => (CITY[n] || [])[1] || '';
+    const { meta } = promo;
+    const rows = promo.routes.map((r) => [
+      regionTitle({ name: r.region }), cityName(r.origin), code(r.origin), cityName(r.dest), code(r.dest),
+      T.cabin[r.cabin] || r.cabin, r.miles, r.flights.join(' '), plain(blackout(r)), r.blackout.join(' '),
+      meta.bookFrom, meta.bookBy, meta.travelFrom, meta.travelTo,
+    ]);
+    const csv = [T.csvHead, ...rows].map((row) => row.map(cell).join(',')).join('\r\n');
+    saveFile(`${name}-${lang}.csv`, '\ufeff' + csv, 'text/csv;charset=utf-8'); // BOM so Excel reads Chinese correctly
+  }
+
   // ---------- data loading, archive and update check ----------
   function setUrl(key, value) {
     const url = new URL(location.href);
@@ -413,6 +448,10 @@
     if (b && b.dataset.lang !== lang) setLang(b.dataset.lang, true);
   });
   $('#checkBtn').addEventListener('click', check);
+  document.querySelector('.downloads').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-dl]');
+    if (b) download(b.dataset.dl);
+  });
   $('#edition').addEventListener('change', (e) => {
     const id = e.target.value;
     checkState = null;

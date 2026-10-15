@@ -199,3 +199,13 @@ td.bo .seg { white-space: nowrap; }
 .promo-stats a { color: var(--hero-to); font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
 .promo-stats a:hover { color: var(--hero-from); }
 @media (max-width: 620px) { .summary { padding: 16px 16px 0; } .region-grid { padding-top: 14px; } }
+
+/* month picker + downloads */
+.left-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 22px; }
+.downloads { display: flex; align-items: center; gap: 6px; }
+.downloads .tlabel { margin-right: 4px; }
+.dl-btn {
+  font: inherit; font-size: 13px; font-weight: 600; color: #fff; background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .3); border-radius: 8px; padding: 5px 10px; cursor: pointer;
+}
+.dl-btn:hover { background: rgba(255, 255, 255, .2); }

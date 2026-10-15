@@ -25,6 +25,8 @@ Current version: see [`VERSION`](VERSION). Release notes: [`CHANGELOG.md`](CHANG
   then the visitor's last choice, then the browser language.
 - **Month picker and archive:** past months stay viewable, marked as archived.
   `?promo=YYYY-MM` links straight to one.
+- **Download:** the month being viewed (current or archived) as CSV (one row per deal,
+  Excel-friendly, headers in the page language) or JSON (the stored data).
 - **Check for updates:** the "检查官网更新 / Check promotion" button.
 
 ## How updates work
@@ -58,6 +60,20 @@ index.json            { current, promos: [{ id, bookBy, travelFrom, travelTo, ro
 promos/<YYYY-MM>.json { id, meta, routes, hash }
 ```
 
+### Backup in git (`archive/`)
+
+A GitHub Action (`.github/workflows/archive-backup.yml`) runs daily at 02:00 UTC, an hour after
+the site's check. It runs `scripts/backup-archive.mjs`, which reads every stored month from
+`/api/promos` and writes `archive/<YYYY-MM>.json` plus `archive/index.json`, then commits only if
+something changed. It never deletes files and writes nothing if the site can't be read, so the
+repo keeps a full, versioned copy of the history independent of Vercel Blob.
+
+- Run it now: GitHub → Actions → "Archive backup" → Run workflow.
+- Run it locally: `node scripts/backup-archive.mjs` (or `SITE_URL=http://localhost:3000 OUT_DIR=/tmp/x …` to test).
+- The workflow only runs from the default branch (`main`), and needs the deployed site to have the API.
+- GitHub pauses scheduled workflows after 60 days without repo activity; each new month creates a
+  commit, so this only happens if promotions stop. Re-enable it from the Actions tab if needed.
+
 ### Environment variables
 
 | Name | Where | Purpose |
@@ -73,8 +89,12 @@ escape-SG/
 ├── README.md
 ├── CHANGELOG.md
 ├── VERSION
+├── archive/               # daily backup of every stored month (written by the GitHub Action)
+├── .github/workflows/
+│   └── archive-backup.yml # daily backup job
 ├── scripts/
-│   └── build-seed.mjs     # regenerate vercel-deploy/data.js from the official page
+│   ├── build-seed.mjs     # regenerate vercel-deploy/data.js from the official page
+│   └── backup-archive.mjs # copy all stored months from the site into archive/
 └── vercel-deploy/         # deployed to Vercel
     ├── index.html         # page skeleton
     ├── styles.css

@@ -10,6 +10,12 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Region cards work as tabs: clicking a card shows that region's table directly below it,
   and the selected card is highlighted with a "↓ Shown below / 下方显示" label.
   Left/right arrow keys move between cards.
+- Daily GitHub backup (`.github/workflows/archive-backup.yml` + `scripts/backup-archive.mjs`):
+  every stored month is copied from the live site into `archive/<YYYY-MM>.json` in the repo,
+  committed only when something changed, so the history survives even if the Vercel storage is lost.
+- Download the month being viewed (current or archived) as CSV or JSON from the header bar.
+  The CSV has one row per deal, uses the page language for headers and city names (with
+  airport codes), and opens with Chinese intact in Excel; the JSON is the stored data as is.
 - Links like `#eu` or `#usa` open a region directly; the address updates when a card is
   chosen, so it can be shared.
 
