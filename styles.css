@@ -116,3 +116,14 @@ td.na { color: var(--faint); }
 #tables { display: grid; gap: 28px; }
 td.fl { white-space: nowrap; }
 td.bo .seg { white-space: nowrap; }
+
+/* language switch */
+.hero { position: relative; }
+.lang { position: absolute; top: 20px; right: 24px; display: flex; border: 1px solid rgba(255, 255, 255, .35); border-radius: 999px; padding: 3px; background: rgba(255, 255, 255, .06); }
+.lang button { border: 0; background: transparent; color: #dbe4ff; font: inherit; font-size: 13px; font-weight: 500; padding: 4px 12px; border-radius: 999px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: #fff; color: var(--hero-from); }
+.hero h1 { padding-right: 120px; }
+@media (max-width: 620px) {
+  .lang { top: 14px; right: 16px; }
+  .hero h1 { padding-right: 0; margin-top: 28px; }
+}

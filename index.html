@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>新加坡航空 KrisFlyer Spontaneous Escapes</title>
-  <meta name="description" content="KrisFlyer Spontaneous Escapes 2026年11月出行优惠：各地区航线、里程、航班号与屏蔽期一览（非官方整理）。">
+  <meta name="description" content="KrisFlyer Spontaneous Escapes, November 2026: routes, miles, flight numbers and blackout dates by region (unofficial). 各地区航线、里程、航班号与屏蔽期一览（非官方整理）。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,48 +14,21 @@
   <main class="page">
     <section class="panel" id="overview">
       <header class="hero">
-        <h1>新加坡航空 KrisFlyer Spontaneous Escapes</h1>
-        <p class="hero-meta">
-          <span class="k">出行期</span> <b>2026年11月1日 — 11月30日</b>
-          <span class="dot">·</span>
-          <span class="k">预订截止</span> <b>2026年10月31日</b> <span class="countdown" id="countdown"></span>
-          <span class="dot">·</span>
-          <span class="k">Saver 奖励票七折</span>
-        </p>
-        <div class="hero-chips">
-          <span class="hchip">✈️ <span id="routeTotal">–</span> 条航线</span>
-          <span class="hchip">🌏 <span id="regionTotal">–</span> 大地区</span>
-          <span class="hchip">💺 经济舱 / 豪华经济舱 / 商务舱里程</span>
-          <a class="hchip" href="#tables">📅 屏蔽期一览</a>
+        <div class="lang" role="group" aria-label="Language / 语言">
+          <button type="button" data-lang="zh">中文</button>
+          <button type="button" data-lang="en">EN</button>
         </div>
+        <h1 data-t="h1"></h1>
+        <p class="hero-meta" id="heroMeta"></p>
+        <div class="hero-chips" id="heroChips"></div>
       </header>
       <div class="region-grid" id="regionGrid"></div>
-      <footer class="legend-bar">
-        <span><b>屏蔽期</b> = 不适用优惠票的日期</span>
-        <span class="dot">·</span>
-        <span><b>—</b> = 无屏蔽期或无该舱位优惠</span>
-        <span class="dot">·</span>
-        <span>里程为单人单程已含折扣，不含税费</span>
-        <span class="src">数据来源：<a id="srcLink" href="#" target="_blank" rel="noopener">singaporeair.com</a></span>
-      </footer>
+      <footer class="legend-bar" id="legendBar"></footer>
     </section>
 
     <div id="tables"></div>
 
-    <section class="panel notes" id="notes">
-      <h2>预订须知</h2>
-      <ul>
-        <li><b>仅限线上预订：</b>需在 singaporeair.com 或 SingaporeAir App 登录 KrisFlyer 兑换，并在同一预订流程中立即出票。会员服务中心、售票处、旅行社均不适用。</li>
-        <li><b>不可更改、不可退票：</b>未使用或部分未使用的机票均不可取消。</li>
-        <li><b>整个行程都须符合条件：</b>任一航段在 11月1日–30日 之外、在 10月31日 之后出票，或不在上表航班之列，整张票都不享优惠。往返如有一程不符合，请分开单程预订。</li>
-        <li><b>航班号必须一致：</b>往返两段的航班号都须在上表中。代码共享航班不适用。</li>
-        <li><b>全里程支付：</b>不适用里程 + 现金。税费另付，不打折。</li>
-        <li><b>其他：</b>可单程或往返，不可中途停留，不可候补，不可与其他优惠叠加。座位有限，先到先得。</li>
-        <li><b>兑换步骤：</b>登录 → Book a Flight → Redeem flights → 在 <b>Promo</b> 票价栏选择航班 → 结账确认。</li>
-        <li><b>另有：</b>酷航 (Scoot) 指定航线经济舱 Saver 奖励票 85 折，需在 FlyScoot.com 或 Scoot App 登录 KrisFlyer 兑换。</li>
-      </ul>
-      <p class="disclaimer">非官方整理，与新加坡航空无关。数据抄录自官方活动页面（<span id="retrieved"></span>）。座位、屏蔽期和条款可能随时变更，预订前请以官网为准。</p>
-    </section>
+    <section class="panel notes" id="notes"></section>
   </main>
 
   <script src="data.js"></script>
