@@ -4,6 +4,25 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-10-15
+
+### Added
+- "Check singaporeair.com / 检查官网更新" button. It fetches the official page, and if a new
+  month's promotion is there it becomes the current one and the previous month is archived.
+  Changes to the current month (e.g. new blackout dates) are synced.
+- Daily automatic check at 09:00 Singapore time (Vercel Cron).
+- Month picker and archive view for past promotions, with an "archived" banner
+  (`?promo=YYYY-MM` links straight to one).
+- `/api/check` and `/api/promos` Vercel functions; promotions are stored in Vercel Blob.
+- Parser (`lib/sia.js`) that reads the official tables for any month, including blackout
+  ranges that cross months or years.
+- `scripts/build-seed.mjs` to regenerate the built-in fallback data.
+- Chinese names and airport codes for more Singapore Airlines destinations.
+
+### Changed
+- Dates, discount and booking notes now come from the data instead of being fixed to November 2026.
+- `data.js` is now only the fallback used when the API isn't available.
+
 ## [0.3.2] - 2026-10-15
 
 ### Removed
@@ -47,7 +66,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Route data (`data.js`) parsed from the official Singapore Airlines page as of 15 Oct 2026.
 - Deployed to Vercel at https://escape-sg.vercel.app.
 
-[0.3.2]: https://github.com/miaolin/escape-SG/compare/290f5f0...main
+[0.4.0]: https://github.com/miaolin/escape-SG/compare/76fab13...main
+[0.3.2]: https://github.com/miaolin/escape-SG/compare/290f5f0...76fab13
 [0.3.1]: https://github.com/miaolin/escape-SG/compare/9486e5f...290f5f0
 [0.3.0]: https://github.com/miaolin/escape-SG/compare/617bb0c...9486e5f
 [0.2.0]: https://github.com/miaolin/escape-SG/compare/daec647...617bb0c
