@@ -12,24 +12,25 @@
 </head>
 <body>
   <main class="page">
+    <header class="panel hero">
+      <div class="lang" role="group" aria-label="Language / 语言">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <h1 data-t="h1"></h1>
+      <div class="hbar toolbar">
+        <label class="edition" id="editionWrap" hidden>
+          <span class="tlabel" data-t="editionLabel"></span>
+          <select id="edition"></select>
+        </label>
+        <div class="checker">
+          <span class="check-status" id="checkStatus" role="status" aria-live="polite"></span>
+          <button type="button" class="check-btn" id="checkBtn"></button>
+        </div>
+      </div>
+    </header>
+
     <section class="panel" id="overview">
-      <header class="hero">
-        <div class="lang" role="group" aria-label="Language / 语言">
-          <button type="button" data-lang="zh">中文</button>
-          <button type="button" data-lang="en">EN</button>
-        </div>
-        <h1 data-t="h1"></h1>
-        <div class="hbar toolbar">
-          <label class="edition" id="editionWrap" hidden>
-            <span class="tlabel" data-t="editionLabel"></span>
-            <select id="edition"></select>
-          </label>
-          <div class="checker">
-            <span class="check-status" id="checkStatus" role="status" aria-live="polite"></span>
-            <button type="button" class="check-btn" id="checkBtn"></button>
-          </div>
-        </div>
-      </header>
       <div class="archived" id="archivedBar" hidden></div>
       <div class="summary">
         <p class="sbar promo-info" id="heroMeta"></p>

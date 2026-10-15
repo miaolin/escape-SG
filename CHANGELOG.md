@@ -16,8 +16,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ### Changed
 - Region tables are shown one at a time, for the selected card, instead of all stacked on the page.
 - The link under each table now reads "↑ Choose another region" and returns to the cards.
-- Header reorganised: the dark header holds the title and a bar with the month picker and
-  check button (with its status). The promotion dates/discount and the route, region and
+- Header reorganised: the dark header is its own card, separate from the overview, and holds
+  the title and a bar with the month picker and check button (with its status). The promotion dates/discount and the route, region and
   cabin counts moved into two light bars directly above the region cards, and the counts
   are plain text instead of button-like chips.
 - The English check button is renamed from "Check singaporeair.com" to "Check promotion".
