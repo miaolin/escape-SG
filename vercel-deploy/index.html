@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>新加坡航空 KrisFlyer Spontaneous Escapes</title>
+  <meta name="description" content="KrisFlyer Spontaneous Escapes, November 2026: routes, miles, flight numbers and blackout dates by region (unofficial). 各地区航线、里程、航班号与屏蔽期一览（非官方整理）。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="panel" id="overview">
+      <header class="hero">
+        <div class="lang" role="group" aria-label="Language / 语言">
+          <button type="button" data-lang="zh">中文</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+        <h1 data-t="h1"></h1>
+        <p class="hero-meta" id="heroMeta"></p>
+        <div class="hero-chips" id="heroChips"></div>
+      </header>
+      <div class="region-grid" id="regionGrid"></div>
+      <footer class="legend-bar" id="legendBar"></footer>
+    </section>
+
+    <div id="tables"></div>
+
+    <section class="panel notes" id="notes"></section>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
