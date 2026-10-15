@@ -2,7 +2,8 @@
 
 An unofficial, bilingual (中文 / English) guide to the Singapore Airlines
 [KrisFlyer Spontaneous Escapes](https://www.singaporeair.com/en_UK/sg/ppsclub-krisflyer/krisflyer-spontaneous-escapes/)
-promotion: 30% off Saver award flights booked by **31 Oct 2026** for travel **1–30 Nov 2026**.
+promotion: a monthly set of discounted Saver award flights. The site keeps up with each
+new month and archives the previous ones.
 
 **Live site:** https://escape-sg.vercel.app
 (direct links: [中文](https://escape-sg.vercel.app/?lang=zh) · [English](https://escape-sg.vercel.app/?lang=en))
@@ -11,16 +12,80 @@ Current version: see [`VERSION`](VERSION). Release notes: [`CHANGELOG.md`](CHANG
 
 ## What the site shows
 
-- **Overview:** promotion dates with a booking countdown, and one card per region
-  (South East Asia, North Asia, West Asia & Africa, Southwest Pacific, Europe, USA)
-  with its route count and mileage range per cabin.
-- **Region tables:** one row per route (e.g. Singapore SIN → Istanbul IST), with
-  miles, flight numbers and blackout dates for Economy, Premium Economy and Business.
+- **Header:** title, 中文 / EN switch, and a toolbar with the month picker, CSV / JSON
+  download, and the "Check promotion" button with the last-checked time.
+- **Promotion bar:** travel dates, booking deadline with a days-left counter (red in the
+  last 3 days, grey once closed) and the discount as a gold badge.
+- **Stats bar:** route, region and cabin counts, and a link down to the blackout tables.
+- **Region cards as tabs:** one card per region in its own colour (jade, sakura, desert
+  amber, ocean, royal indigo, crimson) with route count and mileage ranges. Click a card to
+  show its table directly below (arrow keys move between cards). Links like `#eu` or `#usa`
+  open a region directly (e.g. https://escape-sg.vercel.app/#eu).
+- **Region tables:** one row per route (e.g. Singapore SIN → Istanbul IST), with miles,
+  flight numbers and blackout dates for each cabin.
   "—" means no blackout dates, or no deal in that cabin.
-- **Booking notes:** the main terms in plain language (online only, no changes or
-  refunds, every leg must be a listed flight in November, taxes extra).
-- **Language switch:** 中文 / EN in the header. The first language comes from the
-  `?lang=zh|en` link, then the visitor's last choice, then the browser language.
+- **Booking notes:** the main terms in plain language.
+- **Language switch:** 中文 / EN. The first language comes from the `?lang=zh|en` link,
+  then the visitor's last choice, then the browser language.
+- **Month picker and archive:** past months stay viewable, marked as archived.
+  `?promo=YYYY-MM` links straight to one.
+- **Download:** the month being viewed (current or archived) as CSV (one row per deal,
+  Excel-friendly, headers and city names in the page language) or JSON (the stored data).
+  Files are named `spontaneous-escapes-<YYYY-MM>[-zh|-en].csv|.json`.
+- **Check for updates:** the "检查官网更新 / Check promotion" button (see below).
+
+## How updates work
+
+```
+button (POST) ─┐
+               ├─▶ /api/check ─▶ fetch singaporeair.com ─▶ parse tables ─▶ Vercel Blob
+daily cron ────┘                                                            │
+page ◀─────────────────────────── /api/promos ◀─────────────────────────────┘
+```
+
+- `/api/check` fetches the official page and parses it (`lib/sia.js`). The promotion's id
+  is its travel month (`YYYY-MM`).
+  - **New month:** stored and becomes current; the previous month stays in the archive.
+  - **Same month, different content** (e.g. new blackout dates): the stored copy is updated.
+  - **No change:** nothing is written.
+  - **Fetch or parse failure:** nothing is overwritten; the error is recorded and shown.
+- Button presses within 5 minutes of the last check reuse its result instead of fetching again.
+- Vercel Cron calls `GET /api/check` daily at 01:00 UTC (09:00 Singapore time). In
+  production that call needs the `CRON_SECRET` bearer token, which Vercel sends automatically.
+- `GET /api/check?dry=1` fetches and parses without storing anything, for diagnostics.
+- `/api/promos` returns `{ index, promo }` for the current month, or `?id=YYYY-MM` for an archived one.
+- If the API isn't reachable (e.g. a plain static server), the page falls back to the
+  built-in `data.js`.
+
+### Storage (Vercel Blob store `escape-sg-data`)
+
+```
+index.json            { current, promos: [{ id, bookBy, travelFrom, travelTo, routeCount, hash, updatedAt }],
+                        lastChecked, lastStatus, lastError }
+promos/<YYYY-MM>.json { id, meta, routes, hash }
+```
+
+### Backup in git (`archive/`)
+
+A GitHub Action (`.github/workflows/archive-backup.yml`) runs daily at 02:00 UTC, an hour after
+the site's check. It runs `scripts/backup-archive.mjs`, which reads every stored month from
+`/api/promos` and writes `archive/<YYYY-MM>.json` plus `archive/index.json`, then commits only if
+something changed. It never deletes files and writes nothing if the site can't be read, so the
+repo keeps a full, versioned copy of the history independent of Vercel Blob.
+
+- Run it now: GitHub → Actions → "Archive backup" → Run workflow.
+- Run it locally: `node scripts/backup-archive.mjs` (or `SITE_URL=http://localhost:3000 OUT_DIR=/tmp/x …` to test).
+- The workflow only runs from the default branch (`main`), and needs the deployed site to have the API.
+- GitHub pauses scheduled workflows after 60 days without repo activity; each new month creates a
+  commit, so this only happens if promotions stop. Re-enable it from the Actions tab if needed.
+
+### Environment variables
+
+| Name | Where | Purpose |
+|---|---|---|
+| `BLOB_READ_WRITE_TOKEN` | all environments (set by Vercel when the store was connected) | read/write the Blob store |
+| `CRON_SECRET` | production | protects the cron path of `/api/check` |
+| `BLOB_PREFIX` | optional, local testing | key prefix (e.g. `test/`) so tests don't touch live data |
 
 ## Project layout
 
@@ -29,27 +94,44 @@ escape-SG/
 ├── README.md
 ├── CHANGELOG.md
 ├── VERSION
-└── vercel-deploy/        # the static site; this folder is what gets deployed
-    ├── index.html        # page skeleton
-    ├── styles.css        # styles
-    ├── app.js            # rendering, city/region names, zh/en text
-    └── data.js           # route data (window.PROMO)
+├── archive/               # daily backup of every stored month (written by the GitHub Action)
+├── .github/workflows/
+│   └── archive-backup.yml # daily backup job
+├── scripts/
+│   ├── build-seed.mjs     # regenerate vercel-deploy/data.js from the official page
+│   └── backup-archive.mjs # copy all stored months from the site into archive/
+└── vercel-deploy/         # deployed to Vercel
+    ├── index.html         # page skeleton
+    ├── styles.css
+    ├── app.js             # rendering, region cards/tabs, zh/en text, city/region names, archive, downloads, check UI
+    ├── data.js            # built-in fallback data (window.PROMO_SEED)
+    ├── api/
+    │   ├── check.js       # fetch, parse, store
+    │   └── promos.js      # serve stored promotions
+    ├── lib/
+    │   ├── sia.js         # fetch + parse the official page
+    │   └── store.js       # Vercel Blob read/write
+    ├── vercel.json        # daily cron
+    └── package.json       # @vercel/blob
 ```
 
-There is no build step and no dependencies; the page loads fonts from Google Fonts.
-
 ## Run locally
+
+Full site with the API (uses the Blob token in `vercel-deploy/.env.local`, from `vercel env pull`):
+
+```sh
+cd vercel-deploy
+npm install
+BLOB_PREFIX=test/ vercel dev    # BLOB_PREFIX keeps local tests out of the live data
+```
+
+Static preview only (no update button; shows `data.js`):
 
 ```sh
 python3 -m http.server 8000 --directory vercel-deploy
 ```
 
-Then open http://127.0.0.1:8000.
-
 ## Deploy
-
-The Vercel project (`oaimnils-projects/escape-sg`) is linked from inside
-`vercel-deploy/` (the `.vercel/` folder there is git-ignored).
 
 ```sh
 cd vercel-deploy
@@ -58,22 +140,27 @@ vercel --prod
 
 Vercel is not connected to the GitHub repo, so pushing does **not** redeploy.
 
-## Data
+## Data notes
 
-`vercel-deploy/data.js` holds every deal from the official page as of **15 Oct 2026**:
+Each deal looks like:
 
 ```js
-{ region, origin, dest, cabin, miles, flights: ["SQ714"], blackout: [4, 5, 6] }
+{ region, origin, dest, cabin, miles, flights: ["SQ714"],
+  blackout: ["2026-11-04", "2026-11-05"], blackoutRaw: "4-5 November 2026" }
 ```
 
 - `miles` is per person, one-way, after the discount, excluding taxes.
-- `blackout` lists the November 2026 days the deal doesn't apply.
-- Chinese city names and airport codes live in `app.js` (`CITY`). Phnom Penh uses
-  **KTI** and Siem Reap **SAI**, the cities' new airports.
-
-The data does not update itself. If Singapore Airlines changes routes or blackout
-dates, re-copy the tables from the official page into `data.js`, then bump
-`VERSION` and add a `CHANGELOG.md` entry.
+- If a blackout text can't be parsed, the page shows `blackoutRaw` as written.
+- `archive/<YYYY-MM>.json` and the JSON download use the same shape: `{ id, meta, routes }`
+  (the backup also keeps `hash`), with `meta` holding the source URL, retrieval time,
+  booking and travel dates, and the discount percentages.
+- Chinese city names and airport codes live in `app.js` (`CITY`). A city missing from that
+  list is shown with its English name only. Phnom Penh uses **KTI** and Siem Reap **SAI**,
+  the cities' new airports.
+- The parser relies on the official page's table layout ("MILES REQUIRED FOR … CLASS",
+  "FLIGHT NO.", "BLACKOUT PERIOD") and the terms' "issued between … for travel from …"
+  sentence. If Singapore Airlines redesigns the page, checks will report an error rather
+  than store bad data, and `lib/sia.js` will need updating.
 
 ## Disclaimer
 

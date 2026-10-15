@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>新加坡航空 KrisFlyer Spontaneous Escapes</title>
-  <meta name="description" content="KrisFlyer Spontaneous Escapes, November 2026: routes, miles, flight numbers and blackout dates by region (unofficial). 各地区航线、里程、航班号与屏蔽期一览（非官方整理）。">
+  <meta name="description" content="KrisFlyer Spontaneous Escapes: routes, miles, flight numbers and blackout dates by region, with past months archived (unofficial). 各地区航线、里程、航班号与屏蔽期一览，含往期存档（非官方整理）。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -12,16 +12,37 @@
 </head>
 <body>
   <main class="page">
-    <section class="panel" id="overview">
-      <header class="hero">
-        <div class="lang" role="group" aria-label="Language / 语言">
-          <button type="button" data-lang="zh">中文</button>
-          <button type="button" data-lang="en">EN</button>
+    <header class="panel hero">
+      <div class="lang" role="group" aria-label="Language / 语言">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <h1 data-t="h1"></h1>
+      <div class="hbar toolbar">
+        <div class="left-tools">
+          <label class="edition" id="editionWrap" hidden>
+            <span class="tlabel" data-t="editionLabel"></span>
+            <select id="edition"></select>
+          </label>
+          <div class="downloads" role="group">
+            <span class="tlabel" data-t="downloadLabel"></span>
+            <button type="button" class="dl-btn" data-dl="csv">CSV</button>
+            <button type="button" class="dl-btn" data-dl="json">JSON</button>
+          </div>
         </div>
-        <h1 data-t="h1"></h1>
-        <p class="hero-meta" id="heroMeta"></p>
-        <div class="hero-chips" id="heroChips"></div>
-      </header>
+        <div class="checker">
+          <span class="check-status" id="checkStatus" role="status" aria-live="polite"></span>
+          <button type="button" class="check-btn" id="checkBtn"></button>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel" id="overview">
+      <div class="archived" id="archivedBar" hidden></div>
+      <div class="summary">
+        <p class="sbar promo-info" id="heroMeta"></p>
+        <p class="sbar promo-stats" id="heroStats"></p>
+      </div>
       <div class="region-grid" id="regionGrid"></div>
       <footer class="legend-bar" id="legendBar"></footer>
     </section>
