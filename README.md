@@ -12,11 +12,15 @@ Current version: see [`VERSION`](VERSION). Release notes: [`CHANGELOG.md`](CHANG
 
 ## What the site shows
 
-- **Overview:** booking and travel dates with a countdown, and one card per region
-  with its route count and mileage range per cabin.
-- **Region cards as tabs:** click a region card to show its table directly below (one
-  region at a time; arrow keys move between cards). Links like `#eu` or `#usa` open a
-  region directly (e.g. https://escape-sg.vercel.app/#eu).
+- **Header:** title, 中文 / EN switch, and a toolbar with the month picker, CSV / JSON
+  download, and the "Check promotion" button with the last-checked time.
+- **Promotion bar:** travel dates, booking deadline with a days-left counter (red in the
+  last 3 days, grey once closed) and the discount as a gold badge.
+- **Stats bar:** route, region and cabin counts, and a link down to the blackout tables.
+- **Region cards as tabs:** one card per region in its own colour (jade, sakura, desert
+  amber, ocean, royal indigo, crimson) with route count and mileage ranges. Click a card to
+  show its table directly below (arrow keys move between cards). Links like `#eu` or `#usa`
+  open a region directly (e.g. https://escape-sg.vercel.app/#eu).
 - **Region tables:** one row per route (e.g. Singapore SIN → Istanbul IST), with miles,
   flight numbers and blackout dates for each cabin.
   "—" means no blackout dates, or no deal in that cabin.
@@ -26,8 +30,9 @@ Current version: see [`VERSION`](VERSION). Release notes: [`CHANGELOG.md`](CHANG
 - **Month picker and archive:** past months stay viewable, marked as archived.
   `?promo=YYYY-MM` links straight to one.
 - **Download:** the month being viewed (current or archived) as CSV (one row per deal,
-  Excel-friendly, headers in the page language) or JSON (the stored data).
-- **Check for updates:** the "检查官网更新 / Check promotion" button.
+  Excel-friendly, headers and city names in the page language) or JSON (the stored data).
+  Files are named `spontaneous-escapes-<YYYY-MM>[-zh|-en].csv|.json`.
+- **Check for updates:** the "检查官网更新 / Check promotion" button (see below).
 
 ## How updates work
 
@@ -98,7 +103,7 @@ escape-SG/
 └── vercel-deploy/         # deployed to Vercel
     ├── index.html         # page skeleton
     ├── styles.css
-    ├── app.js             # rendering, region cards/tabs, zh/en text, city/region names, archive + check UI
+    ├── app.js             # rendering, region cards/tabs, zh/en text, city/region names, archive, downloads, check UI
     ├── data.js            # built-in fallback data (window.PROMO_SEED)
     ├── api/
     │   ├── check.js       # fetch, parse, store
@@ -146,6 +151,9 @@ Each deal looks like:
 
 - `miles` is per person, one-way, after the discount, excluding taxes.
 - If a blackout text can't be parsed, the page shows `blackoutRaw` as written.
+- `archive/<YYYY-MM>.json` and the JSON download use the same shape: `{ id, meta, routes }`
+  (the backup also keeps `hash`), with `meta` holding the source URL, retrieval time,
+  booking and travel dates, and the discount percentages.
 - Chinese city names and airport codes live in `app.js` (`CITY`). A city missing from that
   list is shown with its English name only. Phnom Penh uses **KTI** and Siem Reap **SAI**,
   the cities' new airports.
