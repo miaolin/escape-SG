@@ -31,13 +31,9 @@ a { color: inherit; }
 /* ---------- overview hero ---------- */
 .hero { background: linear-gradient(110deg, var(--hero-from) 0%, var(--hero-to) 100%); color: #fff; padding: 36px 44px 30px; }
 .hero h1 { font-size: clamp(24px, 3.6vw, 38px); font-weight: 600; margin: 0 0 14px; letter-spacing: .01em; }
-.hero-meta { font-size: 16px; color: #e5ebff; }
-.hero-meta .k { color: var(--hero-accent); }
-.hero-meta b { font-weight: 500; color: #fff; }
-.countdown { font-size: 12px; background: rgba(255, 255, 255, .14); border-radius: 999px; padding: 2px 8px; margin-left: 4px; }
 
 /* ---------- region cards ---------- */
-.region-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 28px; }
+.region-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px 28px 28px; }
 .rcard {
   position: relative; display: block; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer;
   background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--c);
@@ -130,9 +126,6 @@ td.bo .seg { white-space: nowrap; }
 .panel[role="tabpanel"] { scroll-margin-top: 70px; }
 
 /* hero: stats line + toolbar */
-.hero-stats { font-size: 15px; color: #c7d2fe; }
-.hero-stats a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, .4); }
-.hero-stats a:hover { border-bottom-color: #fff; }
 .toolbar {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
   padding: 8px 10px 8px 14px;
@@ -161,7 +154,7 @@ td.bo .seg { white-space: nowrap; }
   .check-status { text-align: left; }
 }
 
-/* header bars: check / promotion / stats */
+/* header bar (check) */
 .hbar {
   margin: 0 0 10px; padding: 11px 14px; border-radius: 12px;
   background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16);
@@ -180,3 +173,18 @@ td.bo .seg { white-space: nowrap; }
 .rcard[aria-selected="true"] .ranges { padding-right: 96px; }
 .rcard:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
 #tables { scroll-margin-top: 16px; }
+
+/* promotion summary bars, shown with the region cards */
+.summary { display: grid; gap: 10px; padding: 24px 28px 0; }
+.sbar {
+  margin: 0; padding: 11px 16px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--line);
+  color: var(--ink); font-size: 15px;
+}
+.promo-info { font-size: 16px; }
+.promo-info .k { color: var(--hero-to); font-weight: 500; }
+.promo-info b { font-weight: 600; }
+.countdown { font-size: 12px; font-weight: 500; background: #e0e7ff; color: var(--hero-to); border-radius: 999px; padding: 2px 8px; margin-left: 4px; }
+.promo-stats { color: #374151; }
+.promo-stats a { color: var(--hero-to); font-weight: 500; text-decoration: none; border-bottom: 1px solid currentColor; }
+.promo-stats a:hover { color: var(--hero-from); }
+@media (max-width: 620px) { .summary { padding: 16px 16px 0; } .region-grid { padding-top: 14px; } }

@@ -16,9 +16,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ### Changed
 - Region tables are shown one at a time, for the selected card, instead of all stacked on the page.
 - The link under each table now reads "↑ Choose another region" and returns to the cards.
-- Header reorganised into three matching bars under the title: month picker and check
-  button (with its status), then promotion dates and discount, then route, region and cabin
-  counts. The counts are plain text instead of button-like chips.
+- Header reorganised: the dark header holds the title and a bar with the month picker and
+  check button (with its status). The promotion dates/discount and the route, region and
+  cabin counts moved into two light bars directly above the region cards, and the counts
+  are plain text instead of button-like chips.
 - The English check button is renamed from "Check singaporeair.com" to "Check promotion".
 - The "Blackout dates" chip is now a "Blackout dates by region ↓" link in the stats line.
 
