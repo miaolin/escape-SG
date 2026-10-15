@@ -9,9 +9,6 @@
   --hero-from: #0b1428;
   --hero-to: #1e3a8a;
   --hero-accent: #93b4ff;
-  --info-bg: #fff7ed;
-  --info-line: #fde3c4;
-  --info-ink: #9a3412;
   --code-bg: #f1f3f6;
   --radius: 18px;
 }
@@ -66,9 +63,6 @@ a.hchip:hover { background: rgba(255, 255, 255, .18); }
 .rhead .count small { font-size: 14px; font-weight: 400; margin-left: 2px; }
 .rhead .rng { background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .3); border-radius: 999px; padding: 2px 12px; font-size: 13px; }
 
-.infobar { background: var(--info-bg); border-bottom: 1px solid var(--info-line); color: var(--info-ink); padding: 9px 32px; font-size: 14px; display: flex; flex-wrap: wrap; gap: 4px 0; align-items: center; }
-.infobar .dot { color: #e7b98a; }
-.infobar .end { margin-left: auto; }
 
 .tscroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 15px; }
@@ -108,8 +102,8 @@ td.na { color: var(--faint); }
   .panel { border-radius: 0; border-left: 0; border-right: 0; }
   .hero { padding: 26px 16px 22px; }
   .region-grid { grid-template-columns: 1fr; padding: 16px; gap: 14px; }
-  .legend-bar, .infobar, .tfoot, .rhead, .notes { padding-left: 16px; padding-right: 16px; }
-  .legend-bar .src, .infobar .end, .tfoot .back { margin-left: 0; flex-basis: 100%; }
+  .legend-bar, .tfoot, .rhead, .notes { padding-left: 16px; padding-right: 16px; }
+  .legend-bar .src, .tfoot .back { margin-left: 0; flex-basis: 100%; }
   .dot { margin: 0 6px; }
 }
 

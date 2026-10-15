@@ -47,8 +47,6 @@
       legendDash: '<b>—</b> = 无屏蔽期或无该舱位优惠',
       legendMiles: '里程为单人单程已含折扣，不含税费',
       source: '数据来源：',
-      infoBook: '预订截止 2026年10月31日', infoTravel: '出行 2026年11月1日–11月30日',
-      infoDiscount: 'Saver 奖励票 30% off', infoMiles: '里程为单人单程 · 已含折扣 · 不含税费',
       thRoute: '航线', thMiles: '里程', thFlights: '航班号', thBlackout: '屏蔽期',
       back: '↑ 返回总览',
       day: (a, b) => (b ? `${a}–${b}日` : `${a}日`),
@@ -82,8 +80,6 @@
       legendDash: '<b>—</b> = no blackout dates, or no deal in this cabin',
       legendMiles: 'Miles are per person, one-way, after discount, excluding taxes',
       source: 'Source: ',
-      infoBook: 'Book by 31 Oct 2026', infoTravel: 'Travel 1–30 Nov 2026',
-      infoDiscount: '30% off Saver awards', infoMiles: 'Per person, one-way · discounted · excl. taxes',
       thRoute: 'Route', thMiles: 'Miles', thFlights: 'Flights', thBlackout: 'Blackout',
       back: '↑ Back to overview',
       day: (a, b) => (b ? `${a}–${b}` : `${a}`),
@@ -203,11 +199,6 @@
             <div class="count">${g.rows.size}<small>${T.routesUnit}</small></div>
             <div class="rng">${cabinRanges(g).join(' · ')}</div>
           </div>
-        </div>
-        <div class="infobar">
-          <span>🇸🇬 KrisFlyer Spontaneous Escapes</span>${dot}
-          <span>${T.infoBook}</span>${dot}<span>${T.infoTravel}</span>${dot}<span>${T.infoDiscount}</span>
-          <span class="end">${T.infoMiles}</span>
         </div>
         <div class="tscroll"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>
         <div class="tfoot">

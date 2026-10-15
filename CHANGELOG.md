@@ -4,6 +4,12 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.3.2] - 2026-10-15
+
+### Removed
+- The promotion info bar under each region table header (dates, discount and
+  "per person, one-way" note). The miles note is still in the overview legend.
+
 ## [0.3.1] - 2026-10-15
 
 ### Added
@@ -41,7 +47,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Route data (`data.js`) parsed from the official Singapore Airlines page as of 15 Oct 2026.
 - Deployed to Vercel at https://escape-sg.vercel.app.
 
-[0.3.1]: https://github.com/miaolin/escape-SG/compare/9486e5f...main
+[0.3.2]: https://github.com/miaolin/escape-SG/compare/290f5f0...main
+[0.3.1]: https://github.com/miaolin/escape-SG/compare/9486e5f...290f5f0
 [0.3.0]: https://github.com/miaolin/escape-SG/compare/617bb0c...9486e5f
 [0.2.0]: https://github.com/miaolin/escape-SG/compare/daec647...617bb0c
 [0.1.0]: https://github.com/miaolin/escape-SG/commit/daec647
