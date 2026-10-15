@@ -4,6 +4,23 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] - 2026-10-15
+
+### Added
+- Region tabs: one tab per region, each showing its route count. The tab row stays at the
+  top while scrolling a long table and supports the left/right arrow keys.
+- Links like `#eu` or `#usa` open a region's tab directly; the address updates when a
+  tab is chosen, so it can be shared.
+
+### Changed
+- Region tables are shown one at a time in tabs instead of all stacked on the page.
+- Overview region cards now open their region's tab.
+- Header reorganised: route, region and cabin counts are a plain stats line instead of
+  button-like chips. The month picker and check button moved out of the header into their
+  own bar at the top of the page (month on the left, check button and its status on the right).
+- The English check button is renamed from "Check singaporeair.com" to "Check promotion".
+- The "Blackout dates" chip is now a "Blackout dates by region ↓" link in the stats line.
+
 ## [0.4.0] - 2026-10-15
 
 ### Added
@@ -66,7 +83,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Route data (`data.js`) parsed from the official Singapore Airlines page as of 15 Oct 2026.
 - Deployed to Vercel at https://escape-sg.vercel.app.
 
-[0.4.0]: https://github.com/miaolin/escape-SG/compare/76fab13...main
+[0.5.0]: https://github.com/miaolin/escape-SG/compare/048d9f5...main
+[0.4.0]: https://github.com/miaolin/escape-SG/compare/76fab13...048d9f5
 [0.3.2]: https://github.com/miaolin/escape-SG/compare/290f5f0...76fab13
 [0.3.1]: https://github.com/miaolin/escape-SG/compare/9486e5f...290f5f0
 [0.3.0]: https://github.com/miaolin/escape-SG/compare/617bb0c...9486e5f
