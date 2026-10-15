@@ -1,116 +1,62 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Spontaneous Escapes Finder</title>
-  <meta name="description" content="An unofficial, searchable guide to the KrisFlyer Spontaneous Escapes deals for November 2026 travel.">
+  <title>新加坡航空 KrisFlyer Spontaneous Escapes</title>
+  <meta name="description" content="KrisFlyer Spontaneous Escapes 2026年11月出行优惠：各地区航线、里程、航班号与屏蔽期一览（非官方整理）。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Unofficial guide · KrisFlyer Spontaneous Escapes</p>
-      <h1>November 2026 escapes, <em>sorted.</em></h1>
-      <p class="lede">Saver award flights at 30% off on selected Singapore Airlines flights. Filter by cabin, region and the date you want to fly, and see blackout days at a glance.</p>
-      <div class="keyfacts">
-        <div class="fact"><span class="k">Book by</span><span class="v">31 Oct 2026</span><span class="s" id="countdown"></span></div>
-        <div class="fact"><span class="k">Travel</span><span class="v">1–30 Nov 2026</span><span class="s">both dates inclusive</span></div>
-        <div class="fact"><span class="k">Discount</span><span class="v">30% off Saver</span><span class="s">Economy, Premium Economy, Business</span></div>
-        <div class="fact"><span class="k">Deals listed</span><span class="v" id="dealCount">–</span><span class="s" id="cityCount"></span></div>
-      </div>
-    </div>
-  </header>
-
-  <nav class="tabs wrap" aria-label="Sections">
-    <a href="#finder" class="active">Find a flight</a>
-    <a href="#planner">Round-trip planner</a>
-    <a href="#rules">Rules &amp; FAQ</a>
-  </nav>
-
-  <main class="wrap">
-    <section id="finder">
-      <div class="filters">
-        <div class="frow">
-          <label class="search">
-            <span class="sr">Search city or flight</span>
-            <input id="q" type="search" placeholder="Search a city or flight no. (e.g. Bangkok, SQ714)">
-          </label>
-          <label class="sel">
-            <span>Sort</span>
-            <select id="sort">
-              <option value="miles">Fewest miles</option>
-              <option value="avail">Most available days</option>
-              <option value="name">City A–Z</option>
-            </select>
-          </label>
+  <main class="page">
+    <section class="panel" id="overview">
+      <header class="hero">
+        <h1>新加坡航空 KrisFlyer Spontaneous Escapes</h1>
+        <p class="hero-meta">
+          <span class="k">出行期</span> <b>2026年11月1日 — 11月30日</b>
+          <span class="dot">·</span>
+          <span class="k">预订截止</span> <b>2026年10月31日</b> <span class="countdown" id="countdown"></span>
+          <span class="dot">·</span>
+          <span class="k">Saver 奖励票七折</span>
+        </p>
+        <div class="hero-chips">
+          <span class="hchip">✈️ <span id="routeTotal">–</span> 条航线</span>
+          <span class="hchip">🌏 <span id="regionTotal">–</span> 大地区</span>
+          <span class="hchip">💺 经济舱 / 豪华经济舱 / 商务舱里程</span>
+          <a class="hchip" href="#tables">📅 屏蔽期一览</a>
         </div>
-        <div class="frow chips" id="cabinChips" role="group" aria-label="Cabin"></div>
-        <div class="frow chips" id="dirChips" role="group" aria-label="Direction"></div>
-        <div class="frow chips" id="regionChips" role="group" aria-label="Region"></div>
-        <div class="datepick">
-          <div class="dp-head"><span>Flying on <b id="dateLabel">any day</b></span><button id="clearDate" class="link" hidden>Clear date</button></div>
-          <div class="days" id="days"></div>
-        </div>
-      </div>
-
-      <div class="resultbar">
-        <span id="resultCount"></span>
-        <span class="legend"><i class="ok"></i>Available <i class="bo"></i>Blackout <i class="pick"></i>Your date</span>
-      </div>
-      <div id="results" class="results"></div>
+      </header>
+      <div class="region-grid" id="regionGrid"></div>
+      <footer class="legend-bar">
+        <span><b>屏蔽期</b> = 不适用优惠票的日期</span>
+        <span class="dot">·</span>
+        <span><b>—</b> = 无屏蔽期或无该舱位优惠</span>
+        <span class="dot">·</span>
+        <span>里程为单人单程已含折扣，不含税费</span>
+        <span class="src">数据来源：<a id="srcLink" href="#" target="_blank" rel="noopener">singaporeair.com</a></span>
+      </footer>
     </section>
 
-    <section id="planner">
-      <h2>Round-trip planner</h2>
-      <p class="muted">Both legs must fall in November to keep the discount. Pick a city, a cabin for each leg, then tap an outbound and a return date.</p>
-      <div class="planner">
-        <div class="pcontrols">
-          <label class="sel"><span>City</span><select id="pCity"></select></label>
-          <label class="sel"><span>Outbound cabin</span><select id="pOutCabin"></select></label>
-          <label class="sel"><span>Return cabin</span><select id="pRetCabin"></select></label>
-        </div>
-        <div class="pcals">
-          <div class="pcal"><h3 id="pOutTitle">Outbound</h3><div class="cal" id="pOutCal"></div></div>
-          <div class="pcal"><h3 id="pRetTitle">Return</h3><div class="cal" id="pRetCal"></div></div>
-        </div>
-        <div class="psummary" id="pSummary"></div>
-      </div>
-    </section>
+    <div id="tables"></div>
 
-    <section id="rules">
-      <h2>What you need to know</h2>
-      <div class="rulegrid">
-        <div class="rule"><h3>Where to book</h3><p>Online only, at singaporeair.com or the SingaporeAir app. Not through KrisFlyer Membership Services, ticket offices or travel agents. Book and ticket in the same session.</p></div>
-        <div class="rule"><h3>No changes, no refunds</h3><p>Changes aren't allowed, and neither are cancellations, even for partly or fully unused tickets. Make sure of your dates first.</p></div>
-        <div class="rule"><h3>Whole itinerary must qualify</h3><p>If any leg is outside 1–30 Nov, is ticketed after 31 Oct, or is on a flight that isn't listed, the whole booking loses the discount. Book legs separately if needed.</p></div>
-        <div class="rule"><h3>Flight numbers must match</h3><p>The discount only applies to the flight numbers listed. On a return booking, both sectors must be listed flights. Codeshares don't qualify.</p></div>
-        <div class="rule"><h3>Miles only, plus taxes</h3><p>Tickets must be paid fully in miles (no miles + cash). Taxes and fees are charged on top and aren't discounted.</p></div>
-        <div class="rule"><h3>Other limits</h3><p>One-way or return, no stopovers, no waitlisting, can't be combined with other promotions. Seats are limited and go to whoever books first.</p></div>
-      </div>
-
-      <h3 class="sub">How to redeem</h3>
-      <ol class="steps">
-        <li>Log in to KrisFlyer on singaporeair.com or the app.</li>
-        <li>Select <b>Book a Flight</b> → <b>Redeem flights</b> and enter your trip.</li>
-        <li>Pick flights in the <b>Promo</b> fare column. The discount shows in the booking summary.</li>
-        <li>Check out to confirm. Ticketing has to happen immediately.</li>
-      </ol>
-
-      <h3 class="sub">Also in this promotion</h3>
-      <ul class="extras">
-        <li><b>Scoot:</b> 15% off Economy Saver awards on selected Scoot flights. Redeem via "Redeem flights" after logging in to KrisFlyer on FlyScoot.com or the Scoot app.</li>
-        <li><b>Pelago activities with miles:</b> e.g. Melbourne Museum from 1,499 miles, Heathrow Express from 1,582 miles, Ha Long Bay day cruise from 2,800 miles.</li>
+    <section class="panel notes" id="notes">
+      <h2>预订须知</h2>
+      <ul>
+        <li><b>仅限线上预订：</b>需在 singaporeair.com 或 SingaporeAir App 登录 KrisFlyer 兑换，并在同一预订流程中立即出票。会员服务中心、售票处、旅行社均不适用。</li>
+        <li><b>不可更改、不可退票：</b>未使用或部分未使用的机票均不可取消。</li>
+        <li><b>整个行程都须符合条件：</b>任一航段在 11月1日–30日 之外、在 10月31日 之后出票，或不在上表航班之列，整张票都不享优惠。往返如有一程不符合，请分开单程预订。</li>
+        <li><b>航班号必须一致：</b>往返两段的航班号都须在上表中。代码共享航班不适用。</li>
+        <li><b>全里程支付：</b>不适用里程 + 现金。税费另付，不打折。</li>
+        <li><b>其他：</b>可单程或往返，不可中途停留，不可候补，不可与其他优惠叠加。座位有限，先到先得。</li>
+        <li><b>兑换步骤：</b>登录 → Book a Flight → Redeem flights → 在 <b>Promo</b> 票价栏选择航班 → 结账确认。</li>
+        <li><b>另有：</b>酷航 (Scoot) 指定航线经济舱 Saver 奖励票 85 折，需在 FlyScoot.com 或 Scoot App 登录 KrisFlyer 兑换。</li>
       </ul>
+      <p class="disclaimer">非官方整理，与新加坡航空无关。数据抄录自官方活动页面（<span id="retrieved"></span>）。座位、屏蔽期和条款可能随时变更，预订前请以官网为准。</p>
     </section>
   </main>
-
-  <footer class="wrap foot">
-    <p>Unofficial summary, not affiliated with Singapore Airlines. Data copied from the <a id="srcLink" href="#" target="_blank" rel="noopener">official promotion page</a> on <span id="retrieved"></span>. Seat availability, blackout dates and terms can change without notice, so always check the official page before booking.</p>
-  </footer>
 
   <script src="data.js"></script>
   <script src="app.js"></script>
