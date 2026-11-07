@@ -4,7 +4,7 @@
 //   GET  /api/check?dry=1    → fetch and parse only, nothing stored (diagnostics)
 // A new travel month becomes the current promotion and the previous one stays in the archive.
 // If the current month's tables change (e.g. new blackout dates), the stored copy is updated.
-import { fetchPage, parsePage, fingerprint } from '../lib/sia.js';
+import { fetchPage, parsePage, fingerprint, NotPublishedError } from '../lib/sia.js';
 import { storeConfigured, readIndex, writeIndex, readPromo, writePromo } from '../lib/store.js';
 
 const MIN_INTERVAL_MS = 5 * 60 * 1000; // button presses within 5 minutes reuse the last result
@@ -24,6 +24,7 @@ export async function GET(request) {
       const p = await fetchLatest();
       return json({ status: 'parsed', id: p.id, meta: p.meta, routeCount: p.routes.length, hash: p.hash, warnings: p.warnings });
     } catch (e) {
+      if (e instanceof NotPublishedError) return json({ status: 'pending' });
       return json({ status: 'error', error: e.message }, 502);
     }
   }
@@ -42,13 +43,18 @@ async function check({ force }) {
   const now = new Date();
 
   if (!force && index.lastChecked && now - new Date(index.lastChecked) < MIN_INTERVAL_MS && index.lastStatus !== 'error') {
-    return json({ status: 'recent', index });
+    return json({ status: index.lastStatus === 'pending' ? 'pending' : 'recent', index });
   }
 
   let latest;
   try {
     latest = await fetchLatest();
   } catch (e) {
+    if (e instanceof NotPublishedError) {
+      Object.assign(index, { lastChecked: now.toISOString(), lastStatus: 'pending', lastError: null });
+      await writeIndex(index);
+      return json({ status: 'pending', index });
+    }
     Object.assign(index, { lastChecked: now.toISOString(), lastStatus: 'error', lastError: e.message });
     await writeIndex(index);
     return json({ status: 'error', error: e.message, index }, 502);

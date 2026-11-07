@@ -48,7 +48,11 @@ page ◀────────────────────────
   - **New month:** stored and becomes current; the previous month stays in the archive.
   - **Same month, different content** (e.g. new blackout dates): the stored copy is updated.
   - **No change:** nothing is written.
-  - **Fetch or parse failure:** nothing is overwritten; the error is recorded and shown.
+  - **Next month not published yet** (the page says it "will be revealed soon"): nothing is
+    written; the button shows that the next promotion isn't out yet. This is normal until
+    mid-month.
+  - **Fetch or parse failure:** nothing is overwritten; the error is recorded, and the button
+    shows a short message with the technical detail on hover.
 - Button presses within 5 minutes of the last check reuse its result instead of fetching again.
 - Vercel Cron calls `GET /api/check` daily at 01:00 UTC (09:00 Singapore time). In
   production that call needs the `CRON_SECRET` bearer token, which Vercel sends automatically.

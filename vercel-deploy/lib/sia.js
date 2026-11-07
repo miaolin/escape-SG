@@ -3,6 +3,11 @@
 
 export const SOURCE_URL = 'https://www.singaporeair.com/en_UK/sg/ppsclub-krisflyer/krisflyer-spontaneous-escapes/';
 
+// The page is up but the next month's deals haven't been published yet: expected every month, not a failure.
+export class NotPublishedError extends Error {
+  constructor() { super('The next promotion has not been published yet'); }
+}
+
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 const MONTH_RE = MONTHS.join('|');
 
@@ -92,6 +97,9 @@ const cabinFromHeader = (h) => {
 
 export function parsePage(html, { retrieved = new Date().toISOString() } = {}) {
   const plain = text(html.replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, ' '));
+
+  // Between editions the page drops its tables and says the next list is coming (the T&Cs still show the old dates).
+  if (!/<table/i.test(html) && /will be revealed soon/i.test(plain)) throw new NotPublishedError();
 
   const period = new RegExp(
     `issued between (\\d{1,2} (?:${MONTH_RE}) \\d{4}).{0,60}? and (\\d{1,2} (?:${MONTH_RE}) \\d{4}).{0,120}? for travel from (\\d{1,2} (?:${MONTH_RE}) \\d{4}).{0,60}? to (\\d{1,2} (?:${MONTH_RE}) \\d{4})`, 'i',
