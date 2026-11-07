@@ -87,7 +87,8 @@
       status: {
         checking: '正在检查官网…', unchanged: '已是最新', recent: '刚刚检查过，已是最新',
         added: '已获取当期优惠', new: '发现新一期优惠，已更新，上一期已存入往期',
-        updated: '官网内容有变动，已同步', error: (e) => `无法获取官网数据：${e}`,
+        updated: '官网内容有变动，已同步', pending: '新一期优惠尚未公布，通常在每月中旬公布',
+        error: '暂时无法检查官网，请稍后再试',
         unavailable: '当前预览不支持检查更新（需要部署到 Vercel）',
       },
       notesTitle: '预订须知',
@@ -143,7 +144,8 @@
       status: {
         checking: 'Checking singaporeair.com…', unchanged: 'Up to date', recent: 'Checked moments ago: up to date',
         added: 'Saved the current promotion', new: 'New promotion found and shown; the previous one is archived',
-        updated: 'The official page changed; synced', error: (e) => `Couldn't check singaporeair.com: ${e}`,
+        updated: 'The official page changed; synced', pending: 'Next promotion isn\'t out yet; usually announced mid-month',
+        error: 'Couldn\'t check singaporeair.com right now. Please try again later',
         unavailable: 'Checking isn\'t available in this preview (needs the Vercel deployment)',
       },
       notesTitle: 'Before you book',
@@ -226,13 +228,13 @@
     $('#checkBtn').disabled = checkState?.key === 'checking';
     let msg = '';
     if (checkState) {
-      const s = T.status[checkState.key];
-      msg = typeof s === 'function' ? s(checkState.error) : s;
+      msg = T.status[checkState.key];
     } else if (index?.lastChecked) {
       msg = T.lastChecked(T.time(index.lastChecked));
     }
     const el = $('#checkStatus');
     el.textContent = msg;
+    el.title = checkState?.error || ''; // technical detail on hover
     el.className = `check-status ${checkState?.key === 'error' ? 'err' : ''} ${['new', 'updated', 'added'].includes(checkState?.key) ? 'good' : ''}`;
   }
 
