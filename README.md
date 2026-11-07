@@ -51,8 +51,9 @@ page ◀────────────────────────
   - **Next month not published yet** (the page says it "will be revealed soon"): nothing is
     written; the button shows that the next promotion isn't out yet. This is normal until
     mid-month.
-  - **Fetch or parse failure:** nothing is overwritten; the error is recorded, and the button
-    shows a short message with the technical detail on hover.
+  - **Fetch or parse failure, or any row that can't be fully read:** nothing is overwritten;
+    the error is recorded, and the button shows a short message with the technical detail on
+    hover. `GET /api/check?dry=1` lists every row problem.
 - Button presses within 5 minutes of the last check reuse its result instead of fetching again.
 - Vercel Cron calls `GET /api/check` daily at 01:00 UTC (09:00 Singapore time). In
   production that call needs the `CRON_SECRET` bearer token, which Vercel sends automatically.
