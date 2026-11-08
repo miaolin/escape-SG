@@ -61,6 +61,12 @@ page ◀────────────────────────
 - **Email alert:** when a check stores a new month or a changed one, `lib/notify.js` emails
   `NOTIFY_EMAIL` through Resend. Unchanged checks send nothing, and a failed email is retried
   on the next successful check. Without the two settings below, no email is sent.
+- **Failure alert:** if checks keep failing for about a day (two daily runs), one email says
+  so, with the last error. It resets after the next successful check, and an unsent alert is
+  retried on the next failed check.
+- **Region:** functions run in Singapore (`sin1`). singaporeair.com sometimes refuses a
+  production deployment with HTTP 403; a fresh `vercel --prod` has so far got through. After
+  every deploy, `GET /api/check?dry=1` should not show `HTTP 403`.
 - `/api/promos` returns `{ index, promo }` for the current month, or `?id=YYYY-MM` for an archived one.
 - If the API isn't reachable (e.g. a plain static server), the page falls back to the
   built-in `data.js`.

@@ -1,4 +1,4 @@
-// Email the site owner when the stored promotion changes, through Resend's HTTP API.
+// Email the site owner when the stored promotion changes, or when checks keep failing, through Resend's HTTP API.
 // Needs RESEND_API_KEY and NOTIFY_EMAIL; without them this does nothing.
 import { SOURCE_URL } from './sia.js';
 
@@ -29,15 +29,38 @@ export function buildEmail(status, { meta, routes }) {
   return { subject, text };
 }
 
+export function buildFailureEmail(since, error) {
+  const blocked = /HTTP 403/.test(error);
+  return {
+    subject: 'Spontaneous Escapes: the update check keeps failing',
+    text: [
+      `The check of the official page has failed on every attempt since ${new Date(since).toUTCString()}, so new deals won't be picked up.`,
+      '',
+      `Last error: ${error}`,
+      '',
+      blocked
+        ? 'HTTP 403 means singaporeair.com is refusing the site\'s requests. A fresh production deploy usually gets through: run `vercel --prod` in vercel-deploy, then check the link below shows "pending" or "parsed".'
+        : 'The page may have changed. The link below shows every problem found.',
+      '',
+      `Diagnose: ${SITE_URL}/api/check?dry=1`,
+      '',
+      'You will get this once per failing streak; it resets after a successful check.',
+    ].join('\n'),
+  };
+}
+
 // Returns false only if an email should have gone out but didn't, so the caller can retry on the next check.
-export async function notifyChange(status, promo) {
+export const notifyChange = (status, promo) => send(buildEmail(status, promo));
+export const notifyFailure = (since, error) => send(buildFailureEmail(since, error));
+
+async function send(email) {
   const { RESEND_API_KEY: key, NOTIFY_EMAIL: to } = process.env;
   if (!key || !to) return true;
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: FROM, to: [to], ...buildEmail(status, promo) }),
+      body: JSON.stringify({ from: FROM, to: [to], ...email }),
       signal: AbortSignal.timeout(10000),
     });
     if (res.ok) return true;
