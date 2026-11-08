@@ -6,9 +6,11 @@
 // If the current month's tables change (e.g. new blackout dates), the stored copy is updated.
 import { fetchPage, parsePage, fingerprint, NotPublishedError } from '../lib/sia.js';
 import { storeConfigured, readIndex, writeIndex, readPromo, writePromo } from '../lib/store.js';
-import { notifyChange } from '../lib/notify.js';
+import { notifyChange, notifyFailure } from '../lib/notify.js';
 
 const MIN_INTERVAL_MS = 5 * 60 * 1000; // button presses within 5 minutes reuse the last result
+// Email once a failing streak spans two daily cron runs (under 24h so the runs' few seconds of jitter don't matter).
+const FAIL_ALERT_AFTER_MS = 20 * 60 * 60 * 1000;
 
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 
@@ -54,11 +56,16 @@ async function check({ force }) {
     if (latest.warnings.length) throw new Error(`Not saved, ${latest.warnings.length} problem(s) reading the page. First: ${latest.warnings[0]}`);
   } catch (e) {
     if (e instanceof NotPublishedError) {
-      Object.assign(index, { lastChecked: now.toISOString(), lastStatus: 'pending', lastError: null });
+      Object.assign(index, { lastChecked: now.toISOString(), lastStatus: 'pending', lastError: null, failingSince: null, failAlertSent: false });
       await writeIndex(index);
       return json({ status: 'pending', index });
     }
     Object.assign(index, { lastChecked: now.toISOString(), lastStatus: 'error', lastError: e.message });
+    index.failingSince ||= now.toISOString();
+    // An unsent alert stays unsent and is retried on the next failed check.
+    if (!index.failAlertSent && now - new Date(index.failingSince) >= FAIL_ALERT_AFTER_MS) {
+      index.failAlertSent = await notifyFailure(index.failingSince, e.message);
+    }
     await writeIndex(index);
     return json({ status: 'error', error: e.message, index }, 502);
   }
@@ -92,7 +99,7 @@ async function check({ force }) {
 
   index.promos.sort((a, b) => b.id.localeCompare(a.id));
   index.current = index.promos[0].id;
-  Object.assign(index, { lastChecked: now.toISOString(), lastStatus: status, lastError: null });
+  Object.assign(index, { lastChecked: now.toISOString(), lastStatus: status, lastError: null, failingSince: null, failAlertSent: false });
   await writeIndex(index);
 
   const promo = latest.id === index.current ? latest : await readPromo(index.current);
