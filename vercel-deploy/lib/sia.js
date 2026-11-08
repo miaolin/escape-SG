@@ -41,12 +41,12 @@ function parseDate(s) {
 }
 
 // "5-8 November, 12 November, 30 November - 2 December 2026" → ISO dates.
-// Parts without a month inherit the next month named; parts without a year use the last year named (or travel year).
+// Parts without a month inherit the next month named. Each date's year is the one closest to the travel month,
+// so "28 December - 3 January 2027" works whichever year is written and however many are.
 export function parseBlackout(raw, fallbackYear, fallbackMonth) {
   const s = raw.trim();
   if (!s || /^[-–—]$/.test(s)) return { dates: [], ok: true };
-  const years = [...s.matchAll(/\b(\d{4})\b/g)].map((m) => +m[1]);
-  const year = years.length ? Math.min(...years) : fallbackYear;
+  const yearOf = (month) => fallbackYear + (month - fallbackMonth < -6 ? 1 : month - fallbackMonth > 6 ? -1 : 0);
   const parts = s.replace(/\d{4}\s*$/, '').split(/[,;&]|\band\b/i).map((p) => p.trim()).filter(Boolean);
   const parsed = [];
   let ok = true;
@@ -68,9 +68,9 @@ export function parseBlackout(raw, fallbackYear, fallbackMonth) {
   }
   const dates = new Set();
   for (const p of parsed) {
-    const start = new Date(Date.UTC(year, p.mm1 - 1, p.d1));
-    const end = p.d2 ? new Date(Date.UTC(year, p.mm2 - 1, p.d2)) : start;
-    if (end < start) end.setUTCFullYear(end.getUTCFullYear() + 1);
+    const start = new Date(Date.UTC(yearOf(p.mm1), p.mm1 - 1, p.d1));
+    const end = p.d2 ? new Date(Date.UTC(yearOf(p.mm2), p.mm2 - 1, p.d2)) : start;
+    if (end < start) { ok = false; continue; }
     for (let t = start; t <= end; t = new Date(t.getTime() + 864e5)) {
       dates.add(t.toISOString().slice(0, 10));
     }

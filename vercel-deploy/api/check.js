@@ -49,6 +49,8 @@ async function check({ force }) {
   let latest;
   try {
     latest = await fetchLatest();
+    // Don't let a partly read page replace complete stored deals.
+    if (latest.warnings.length) throw new Error(`Not saved, ${latest.warnings.length} problem(s) reading the page. First: ${latest.warnings[0]}`);
   } catch (e) {
     if (e instanceof NotPublishedError) {
       Object.assign(index, { lastChecked: now.toISOString(), lastStatus: 'pending', lastError: null });
@@ -89,5 +91,5 @@ async function check({ force }) {
   await writeIndex(index);
 
   const promo = latest.id === index.current ? latest : await readPromo(index.current);
-  return json({ status, index, promo, warnings: latest.warnings });
+  return json({ status, index, promo });
 }
