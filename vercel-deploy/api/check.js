@@ -6,6 +6,7 @@
 // If the current month's tables change (e.g. new blackout dates), the stored copy is updated.
 import { fetchPage, parsePage, fingerprint, NotPublishedError } from '../lib/sia.js';
 import { storeConfigured, readIndex, writeIndex, readPromo, writePromo } from '../lib/store.js';
+import { notifyChange } from '../lib/notify.js';
 
 const MIN_INTERVAL_MS = 5 * 60 * 1000; // button presses within 5 minutes reuse the last result
 
@@ -84,6 +85,10 @@ async function check({ force }) {
     status = 'unchanged';
   }
   if (status !== 'unchanged') await writePromo(latest);
+
+  // A failed email stays pending in the index and is retried on the next successful check.
+  const toNotify = status === 'unchanged' ? index.notifyPending : status;
+  if (toNotify) index.notifyPending = (await notifyChange(toNotify, latest)) ? null : toNotify;
 
   index.promos.sort((a, b) => b.id.localeCompare(a.id));
   index.current = index.promos[0].id;

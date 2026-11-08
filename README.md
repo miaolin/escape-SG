@@ -58,6 +58,9 @@ page ◀────────────────────────
 - Vercel Cron calls `GET /api/check` daily at 01:00 UTC (09:00 Singapore time). In
   production that call needs the `CRON_SECRET` bearer token, which Vercel sends automatically.
 - `GET /api/check?dry=1` fetches and parses without storing anything, for diagnostics.
+- **Email alert:** when a check stores a new month or a changed one, `lib/notify.js` emails
+  `NOTIFY_EMAIL` through Resend. Unchanged checks send nothing, and a failed email is retried
+  on the next successful check. Without the two settings below, no email is sent.
 - `/api/promos` returns `{ index, promo }` for the current month, or `?id=YYYY-MM` for an archived one.
 - If the API isn't reachable (e.g. a plain static server), the page falls back to the
   built-in `data.js`.
@@ -90,6 +93,8 @@ repo keeps a full, versioned copy of the history independent of Vercel Blob.
 |---|---|---|
 | `BLOB_READ_WRITE_TOKEN` | all environments (set by Vercel when the store was connected) | read/write the Blob store |
 | `CRON_SECRET` | production | protects the cron path of `/api/check` |
+| `RESEND_API_KEY` | production (optional) | sends the email alert |
+| `NOTIFY_EMAIL` | production (optional) | the address to alert; must be the one on the Resend account, because alerts use Resend's shared sender |
 | `BLOB_PREFIX` | optional, local testing | key prefix (e.g. `test/`) so tests don't touch live data |
 
 ## Project layout
