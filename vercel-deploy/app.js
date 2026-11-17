@@ -64,6 +64,7 @@
       daysLeft: (n) => `还剩 ${n} 天`, lastDay: '今天截止', closed: '已截止',
       routes: (n) => `${n} 条航线`, routesUnit: '条航线', regions: (n) => `${n} 大地区`,
       blackoutLink: '各地区屏蔽期 ↓',
+      officialLink: '官方活动页面 ↗',
       cabin: { 'Economy': '经济舱', 'Premium Economy': '豪华经济舱', 'Business': '商务舱', 'First': '头等舱' },
       milesRange: (cab, r) => `${cab} ${r} 里程`,
       legendBo: '<b>屏蔽期</b> = 不适用优惠票的日期',
@@ -121,6 +122,7 @@
       daysLeft: (n) => `${n} days left`, lastDay: 'Last day', closed: 'Closed',
       routes: (n) => `${n} route${n === 1 ? '' : 's'}`, routesUnit: 'routes', regions: (n) => `${n} region${n === 1 ? '' : 's'}`,
       blackoutLink: 'Blackout dates by region ↓',
+      officialLink: 'Official promotion page ↗',
       cabin: { 'Economy': 'Economy', 'Premium Economy': 'Premium Economy', 'Business': 'Business', 'First': 'First' },
       milesRange: (cab, r) => `${cab} ${r} miles`,
       legendBo: '<b>Blackout</b> = dates the deal doesn\'t apply',
@@ -272,7 +274,8 @@
     $('#heroStats').innerHTML = `<span>✈️ ${boldNum(T.routes(groups.reduce((n, g) => n + g.rows.size, 0)))}</span>${dot}`
       + `<span>🌏 ${boldNum(T.regions(groups.length))}</span>${dot}`
       + `<span>💺 ${esc(cabinsShown)}</span>${dot}`
-      + `<a href="#tables">${T.blackoutLink}</a>`;
+      + `<a href="#tables">${T.blackoutLink}</a>${dot}`
+      + `<a href="${esc(meta.source)}" target="_blank" rel="noopener">${T.officialLink}</a>`;
     renderEditions();
     renderStatus();
 
