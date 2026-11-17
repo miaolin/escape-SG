@@ -51,11 +51,15 @@ export function parseBlackout(raw, fallbackYear, fallbackMonth) {
   const parsed = [];
   let ok = true;
   const re = new RegExp(`^(\\d{1,2})\\s*(${MONTH_RE})?(?:\\s*\\d{4})?\\s*(?:[-–—]|to)?\\s*(?:(\\d{1,2})\\s*(${MONTH_RE})?)?$`, 'i');
+  const bareMonth = new RegExp(`^(?:${MONTH_RE})(?:\\s*\\d{4})?$`, 'i');
   for (const p of parts) {
+    // A month with no day carries no dates (seen on SIA's page as a typo: "1-4 December, December, 7-13 December").
+    if (bareMonth.test(p)) continue;
     const m = re.exec(p);
     if (!m) { ok = false; continue; }
     parsed.push({ d1: +m[1], m1: m[2], d2: m[3] ? +m[3] : null, m2: m[4] });
   }
+  if (!parsed.length) ok = false; // only bare months (e.g. "December"): could mean the whole month, so flag it
   // fill missing months from the right (e.g. "5-8 November" → both ends November; "4" then "7-9 November")
   let next = fallbackMonth;
   for (let i = parsed.length - 1; i >= 0; i--) {
